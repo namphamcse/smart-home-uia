@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Account — Smart Home UIA</title>
+    <link rel="stylesheet" href="style/login.css" />
+    <style>
+      /* Register-specific tweaks */
+      .left-panel {
+        background-color: #111111;
+      }
+
+      .left-panel::before {
+        background: var(--primary);
+      }
+
+      .left-panel::after {
+        background: var(--accent);
+      }
+
+      .logo-text {
+        color: var(--white);
+      }
+
+      .panel-heading {
+        color: var(--white);
+      }
+
+      .panel-heading em {
+        color: var(--accent);
+      }
+
+      .step-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        border: 3px solid var(--border);
+        box-shadow: var(--shadow-xl);
+        margin-bottom: 36px;
+        overflow: hidden;
+      }
+
+      .step-item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px 20px;
+        background: var(--white);
+        border-bottom: 3px solid var(--border);
+      }
+
+      .step-item:last-child {
+        border-bottom: none;
+      }
+
+      .step-num {
+        width: 32px;
+        height: 32px;
+        background: var(--primary);
+        border: 3px solid var(--border);
+        box-shadow: 2px 2px 0 var(--border);
+        font-family: var(--font-head);
+        font-size: 14px;
+        font-weight: 800;
+        color: var(--white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .step-text {
+        font-family: var(--font-head);
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--border);
+      }
+
+      .step-sub {
+        font-size: 11px;
+        color: #777;
+        margin-top: 1px;
+      }
+
+      /* Overrides for register panel heading size */
+      .register-heading {
+        font-size: clamp(30px, 3vw, 44px);
+      }
+
+      /* Benefits list in right panel */
+      .benefit-row {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 28px;
+      }
+
+      .benefit-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+        color: #444;
+        font-weight: 500;
+      }
+
+      .benefit-dot {
+        width: 10px;
+        height: 10px;
+        background: var(--success);
+        border: 2px solid var(--border);
+        flex-shrink: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrapper">
+      <!-- ═══════════ LEFT PANEL ═══════════ -->
+      <aside class="left-panel">
+        <a href="login.html" class="logo anim-slide-left">
+          <div class="logo-mark">S</div>
+          <div class="logo-text">
+            Smart Home UIA
+            <span>Intelligent Living</span>
+          </div>
+        </a>
+
+        <div class="panel-hero">
+          <div class="panel-tag anim-slide-left delay-1">
+            Get Started · Free
+          </div>
+
+          <h1 class="panel-heading register-heading anim-slide-left delay-2">
+            Set up your<br />home in just<br /><em>3 steps.</em>
+          </h1>
+
+          <div class="step-list anim-slide-left delay-3">
+            <div class="step-item">
+              <div class="step-num">1</div>
+              <div>
+                <div class="step-text">Create your account</div>
+                <div class="step-sub">Sign up with your Google account</div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">2</div>
+              <div>
+                <div class="step-text">Connect your devices</div>
+                <div class="step-sub">
+                  Add lights, thermostats, cameras &amp; more
+                </div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div>
+                <div class="step-text">Automate everything</div>
+                <div class="step-sub">
+                  Build scenes, schedules, and smart rules
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stats-row anim-slide-left delay-4">
+            <div class="stat-box">
+              <span class="stat-num">Free</span>
+              <span class="stat-label">Forever Plan</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-num">2 min</span>
+              <span class="stat-label">Setup Time</span>
+            </div>
+            <div class="stat-box" style="background: var(--accent)">
+              <span class="stat-num">0</span>
+              <span class="stat-label">No Card Needed</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ═══════════ RIGHT PANEL ═══════════ -->
+      <main class="right-panel">
+        <p class="panel-nav">
+          Already a member? <a href="login.html">Sign in</a>
+        </p>
+
+        <div class="form-card">
+          <p class="form-eyebrow anim-slide-up">New Account</p>
+          <h2 class="form-title anim-slide-up delay-1">
+            Create your<br />account today.
+          </h2>
+          <p class="form-subtitle anim-slide-up delay-2">
+            Join 40,000+ homeowners using Smart Home UIA to automate and monitor
+            their living spaces.
+          </p>
+
+          <!-- Benefits quick list -->
+          <div class="benefit-row anim-slide-up delay-2">
+            <div class="benefit-item">
+              <div class="benefit-dot"></div>
+              Control unlimited devices from one dashboard
+            </div>
+            <div class="benefit-item">
+              <div class="benefit-dot"></div>
+              Real-time alerts and energy usage insights
+            </div>
+            <div class="benefit-item">
+              <div class="benefit-dot"></div>
+              Share access with family members securely
+            </div>
+          </div>
+
+          <!-- Google Button -->
+          <div class="anim-slide-up delay-3">
+            <button id="btn-google" class="btn-google" type="button">
+              <svg
+                class="google-g"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  fill="#4285F4"
+                />
+                <path
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  fill="#34A853"
+                />
+                <path
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                  fill="#FBBC05"
+                />
+                <path
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                  fill="#EA4335"
+                />
+              </svg>
+              <span class="btn-label">Sign up with Google</span>
+            </button>
+          </div>
+
+          <!-- Terms -->
+          <div class="terms-block anim-slide-up delay-4">
+            <input type="checkbox" id="terms-cb" class="custom-checkbox" />
+            <div>
+              <label for="terms-cb" class="terms-text">
+                By creating an account, I confirm I have read and agree to the
+                <a href="#">Terms of Service</a>,
+                <a href="#">Privacy Policy</a>, and
+                <a href="#">Data Processing Agreement</a> of Smart Home UIA.
+              </label>
+              <div id="terms-error-msg" class="terms-error">
+                Please accept the Terms of Service to create your account.
+              </div>
+            </div>
+          </div>
+
+          <div class="divider anim-slide-up delay-5">
+            <div class="divider-line"></div>
+            <span class="divider-text">Secured by</span>
+            <div class="divider-line"></div>
+          </div>
+
+          <!-- Security Badges -->
+          <div class="security-row anim-slide-up delay-5">
+            <div class="badge">
+              <span class="badge-title">OAuth 2.0</span>
+              <span class="badge-sub">Industry Standard</span>
+            </div>
+            <div class="badge">
+              <span class="badge-title">End-to-End</span>
+              <span class="badge-sub">Encrypted</span>
+            </div>
+            <div class="badge">
+              <span class="badge-title">GDPR</span>
+              <span class="badge-sub">Compliant</span>
+            </div>
+          </div>
+        </div>
+        <!-- /form-card -->
+      </main>
+    </div>
+    <!-- /page-wrapper -->
+
+    <script src="script/login.js"></script>
+  </body>
+</html>
