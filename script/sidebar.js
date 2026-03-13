@@ -61,7 +61,7 @@
   /* ── State ──────────────────────────── */
   const SidebarState = {
     unreadCount: 5,
-    user: { name: "Jane Doe", initials: "JD", role: "Administrator" },
+    user: { name: "Trung4n", initials: "TA", role: "Administrator" },
     isAdmin: document.body.dataset.role === "admin",
     activeId: _detectActive(),
   };
