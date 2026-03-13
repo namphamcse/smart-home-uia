@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Devices — Smart Home UIA</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style/sidebar.css" />
+    <link rel="stylesheet" href="style/devices.css" />
+  </head>
+  <body data-role="admin">
+    <!-- Sidebar -->
+    <div id="app-sidebar"></div>
+
+    <!-- Page shell -->
+    <div class="page-shell">
+      <!-- Topbar -->
+      <div class="topbar">
+        <span class="topbar-title">Devices</span>
+        <span class="topbar-sub">— Control &amp; Manage</span>
+        <div class="topbar-spacer"></div>
+        <div class="topbar-clock" id="nav-clock">00:00:00</div>
+      </div>
+
+      <!-- 2. Filter Bar -->
+      <div class="filter-bar">
+        <span class="filter-label">Filter:</span>
+        <button class="filter-btn active" data-filter="all">
+          <i class="fa-solid fa-border-all"></i> All
+          <span class="filter-count" id="count-all">6</span>
+        </button>
+        <button class="filter-btn" data-filter="light">
+          <i class="fa-solid fa-lightbulb"></i> Light
+          <span class="filter-count" id="count-light">2</span>
+        </button>
+        <button class="filter-btn" data-filter="fan">
+          <i class="fa-solid fa-fan"></i> Fan
+          <span class="filter-count" id="count-fan">1</span>
+        </button>
+        <button class="filter-btn" data-filter="door">
+          <i class="fa-solid fa-door-closed"></i> Door
+          <span class="filter-count" id="count-door">1</span>
+        </button>
+        <button class="filter-btn" data-filter="ac">
+          <i class="fa-solid fa-snowflake"></i> AC
+          <span class="filter-count" id="count-ac">1</span>
+        </button>
+        <button class="filter-btn" data-filter="camera">
+          <i class="fa-solid fa-video"></i> Camera
+          <span class="filter-count" id="count-camera">1</span>
+        </button>
+
+        <div class="filter-spacer"></div>
+
+        <div class="devices-summary">
+          <div class="summary-pill online">
+            <i class="fa-solid fa-circle-dot" style="font-size: 8px"></i> 5
+            Online
+          </div>
+          <div class="summary-pill offline">
+            <i class="fa-solid fa-circle" style="font-size: 8px"></i> 1 Offline
+          </div>
+        </div>
+      </div>
+
+      <!-- Main layout: Cards + History -->
+      <div class="devices-layout">
+        <!-- 3. Device Cards -->
+        <div class="device-grid-wrap">
+          <div class="grid-head">
+            <div class="grid-title">All Devices</div>
+          </div>
+
+          <div class="device-grid" id="device-grid">
+            <!-- ─ CARD 1: Living Room Light (LED) ─ -->
+            <div class="dev-card is-on selected" data-id="d1" data-type="light">
+              <div class="card-head">
+                <div class="card-icon">
+                  <i class="fa-solid fa-lightbulb"></i>
+                </div>
+                <div class="card-meta">
+                  <div class="card-name">Living Room Light</div>
+                  <div class="card-room">
+                    <i
+                      class="fa-solid fa-location-dot"
+                      style="font-size: 8px; color: var(--muted)"
+                    ></i>
+                    Living Room
+                  </div>
+                </div>
+                <span class="card-status online">Online</span>
+              </div>
+
+              <div class="card-controls">
+                <!-- Color picker -->
+                <div class="color-row">
+                  <span class="color-label">Color</span>
+                  <div class="color-swatch-row">
+                    <div
+                      class="color-swatch active"
+                      style="background: #ffffff"
+                      data-color="#FFFFFF"
+                      title="White"
+                    ></div>
+                    <div
+                      class="color-swatch"
+                      style="background: #fff3cd"
+                      data-color="#FFF3CD"
+                      title="Warm White"
+                    ></div>
+                    <div
+                      class="color-swatch"
+                      style="background: #facc15"
+                      data-color="#FACC15"
+                      title="Yellow"
+                    ></div>
+                    <div
+                      class="color-swatch"
+                      style="background: #2563eb"
+                      data-color="#2563EB"
+                      title="Blue"
+                    ></div>
+                    <div
+                      class="color-swatch"
+                      style="background: #ef4444"
+                      data-color="#EF4444"
+                      title="Red"
+                    ></div>
+                    <div
+                      class="color-swatch"
+                      style="background: #34d399"
+                      data-color="#34D399"
+                      title="Green"
+                    ></div>
+                    <input
+                      type="color"
+                      class="color-picker-input"
+                      title="Custom color"
+                      value="#FFFFFF"
+                    />
+                  </div>
+                  <div
+                    class="color-preview"
+                    id="d1-color-preview"
+                    style="background: #ffffff"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="card-toggle-row">
+                <span class="card-toggle-label">Power</span>
+                <label class="toggle">
+                  <input
+                    type="checkbox"
+                    class="dev-power-toggle"
+                    data-id="d1"
+                    checked
+                  />
+                  <div class="toggle-track"></div>
+                  <div class="toggle-thumb"></div>
+                </label>
+              </div>
+
+              <div class="auto-toggle-row">
+                <span class="auto-toggle-label"
+                  ><i class="fa-solid fa-gears"></i> Auto Mode</span
+                >
+                <label class="auto-toggle">
+                  <input type="checkbox" class="dev-auto-toggle" data-id="d1" />
+                  <div class="auto-toggle-track"></div>
+                  <div class="auto-toggle-thumb"></div>
+                </label>
+              </div>
+            </div>
+
+            <!-- ─ CARD 2: Bedroom Light (LED) ─ -->
+            <div class="dev-card" data-id="d2" data-type="light">
+              <div class="card-head">
+                <div class="card-icon">
+                  <i class="fa-solid fa-lightbulb"></i>
+                </div>
+                <div class="card-meta">
+                  <div class="card-name">Bedroom Light</div>
+                  <div class="card-room">
+                    <i
+                      class="fa-solid fa-location-dot"
+                      style="font-size: 8px; color: var(--muted)"
+                    ></i>
+                    Bedroom
+                  </div>
+                </div>
+                <span class="card-status online">Online</span>
+              </div>
+
+              <div class="card-controls">
+                <div class="color-row">
+                  <span class="color-label">Color</span>
+                  <div class="color-swatch-row">
+                    <div
+                      class="color-swatch active"
+                      style="background: #ffffff"
+                      data-color="#FFFFFF"
+                      title="White"
+                    ></div>
+                    <div
+                      class="color-swatch"
+                      style="background: #fff3cd"
+                      data-color="#FFF3CD"
+                      title="Warm White"
+                    ></div>
+                    <div
+                      class="color-swatch"
+                      style="background: #facc15"
+                      data-color="#FACC15"
+                      title="Yellow"
+                    ></div>
+                    <div
+                      class="color-swatch"
+                      style="background: #2563eb"
+                      data-color="#2563EB"
+                      title="Blue"
+                    ></div>
+                    <div
+                      class="color-swatch"
+                      style="background: #ef4444"
+                      data-color="#EF4444"
+                      title="Red"
+                    ></div>
+                    <div
+                      class="color-swatch"
+                      style="background: #34d399"
+                      data-color="#34D399"
+                      title="Green"
+                    ></div>
+                    <input
+                      type="color"
+                      class="color-picker-input"
+                      title="Custom color"
+                      value="#FFFFFF"
+                    />
+                  </div>
+                  <div
+                    class="color-preview"
+                    id="d2-color-preview"
+                    style="background: #ffffff"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="card-toggle-row">
+                <span class="card-toggle-label">Power</span>
+                <label class="toggle">
+                  <input
+                    type="checkbox"
+                    class="dev-power-toggle"
+                    data-id="d2"
+                  />
+                  <div class="toggle-track"></div>
+                  <div class="toggle-thumb"></div>
+                </label>
+              </div>
+
+              <div class="auto-toggle-row">
+                <span class="auto-toggle-label"
+                  ><i class="fa-solid fa-gears"></i> Auto Mode</span
+                >
+                <label class="auto-toggle">
+                  <input
+                    type="checkbox"
+                    class="dev-auto-toggle"
+                    data-id="d2"
+                    checked
+                  />
+                  <div class="auto-toggle-track"></div>
+                  <div class="auto-toggle-thumb"></div>
+                </label>
+              </div>
+            </div>
+
+            <!-- ─ CARD 3: Ceiling Fan ─ -->
+            <div class="dev-card is-on" data-id="d3" data-type="fan">
+              <div class="card-head">
+                <div class="card-icon"><i class="fa-solid fa-fan"></i></div>
+                <div class="card-meta">
+                  <div class="card-name">Ceiling Fan</div>
+                  <div class="card-room">
+                    <i
+                      class="fa-solid fa-location-dot"
+                      style="font-size: 8px; color: var(--muted)"
+                    ></i>
+                    Living Room
+                  </div>
+                </div>
+                <span class="card-status online">Online</span>
+              </div>
+
+              <div class="card-controls">
+                <div class="fan-row">
+                  <button class="fan-speed-btn" data-id="d3" data-speed="1">
+                    Low
+                  </button>
+                  <button
+                    class="fan-speed-btn active"
+                    data-id="d3"
+                    data-speed="2"
+                  >
+                    Med
+                  </button>
+                  <button class="fan-speed-btn" data-id="d3" data-speed="3">
+                    High
+                  </button>
+                  <div class="fan-temp" id="d3-temp">27.4<span>°C</span></div>
+                </div>
+              </div>
+
+              <div class="card-toggle-row">
+                <span class="card-toggle-label">Power</span>
+                <label class="toggle">
+                  <input
+                    type="checkbox"
+                    class="dev-power-toggle"
+                    data-id="d3"
+                    checked
+                  />
+                  <div class="toggle-track"></div>
+                  <div class="toggle-thumb"></div>
+                </label>
+              </div>
+
+              <div class="auto-toggle-row">
+                <span class="auto-toggle-label"
+                  ><i class="fa-solid fa-gears"></i> Auto Mode</span
+                >
+                <label class="auto-toggle">
+                  <input type="checkbox" class="dev-auto-toggle" data-id="d3" />
+                  <div class="auto-toggle-track"></div>
+                  <div class="auto-toggle-thumb"></div>
+                </label>
+              </div>
+            </div>
+
+            <!-- ─ CARD 4: Front Door ─ -->
+            <div class="dev-card" data-id="d4" data-type="door">
+              <div class="card-head">
+                <div class="card-icon">
+                  <i class="fa-solid fa-door-closed"></i>
+                </div>
+                <div class="card-meta">
+                  <div class="card-name">Front Door</div>
+                  <div class="card-room">
+                    <i
+                      class="fa-solid fa-location-dot"
+                      style="font-size: 8px; color: var(--muted)"
+                    ></i>
+                    Entrance
+                  </div>
+                </div>
+                <span class="card-status online">Online</span>
+              </div>
+
+              <div class="card-controls">
+                <div class="door-btn-row">
+                  <button
+                    class="door-btn open-btn"
+                    data-id="d4"
+                    data-action="open"
+                  >
+                    <i class="fa-solid fa-lock-open"></i> Open
+                  </button>
+                  <button
+                    class="door-btn close-btn"
+                    data-id="d4"
+                    data-action="close"
+                  >
+                    <i class="fa-solid fa-lock"></i> Close
+                  </button>
+                </div>
+                <div class="servo-row">
+                  <span class="servo-label">Servo</span>
+                  <div class="servo-bar-wrap">
+                    <div
+                      class="servo-bar-fill"
+                      id="d4-servo-fill"
+                      style="width: 0%"
+                    ></div>
+                  </div>
+                  <span class="servo-val" id="d4-servo-val">0°</span>
+                </div>
+              </div>
+
+              <div class="card-toggle-row">
+                <span class="card-toggle-label">Lock</span>
+                <label class="toggle">
+                  <input
+                    type="checkbox"
+                    class="dev-power-toggle"
+                    data-id="d4"
+                  />
+                  <div class="toggle-track"></div>
+                  <div class="toggle-thumb"></div>
+                </label>
+              </div>
+
+              <div class="auto-toggle-row">
+                <span class="auto-toggle-label"
+                  ><i class="fa-solid fa-gears"></i> Auto Mode</span
+                >
+                <label class="auto-toggle">
+                  <input type="checkbox" class="dev-auto-toggle" data-id="d4" />
+                  <div class="auto-toggle-track"></div>
+                  <div class="auto-toggle-thumb"></div>
+                </label>
+              </div>
+            </div>
+
+            <!-- ─ CARD 5: AC Unit ─ -->
+            <div class="dev-card" data-id="d5" data-type="ac">
+              <div class="card-head">
+                <div class="card-icon">
+                  <i class="fa-solid fa-snowflake"></i>
+                </div>
+                <div class="card-meta">
+                  <div class="card-name">AC Unit</div>
+                  <div class="card-room">
+                    <i
+                      class="fa-solid fa-location-dot"
+                      style="font-size: 8px; color: var(--muted)"
+                    ></i>
+                    Bedroom
+                  </div>
+                </div>
+                <span class="card-status offline">Offline</span>
+              </div>
+
+              <div class="card-controls">
+                <div class="ac-row">
+                  <span class="ac-label">Set Temp</span>
+                  <div class="ac-temp-ctrl">
+                    <button class="ac-temp-btn" data-id="d5" data-dir="-1">
+                      −
+                    </button>
+                    <span class="ac-temp-val" id="d5-temp">24°C</span>
+                    <button class="ac-temp-btn" data-id="d5" data-dir="1">
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-toggle-row">
+                <span class="card-toggle-label">Power</span>
+                <label class="toggle">
+                  <input
+                    type="checkbox"
+                    class="dev-power-toggle"
+                    data-id="d5"
+                    disabled
+                  />
+                  <div class="toggle-track"></div>
+                  <div class="toggle-thumb"></div>
+                </label>
+              </div>
+
+              <div class="auto-toggle-row">
+                <span class="auto-toggle-label"
+                  ><i class="fa-solid fa-gears"></i> Auto Mode</span
+                >
+                <label class="auto-toggle">
+                  <input
+                    type="checkbox"
+                    class="dev-auto-toggle"
+                    data-id="d5"
+                    disabled
+                  />
+                  <div class="auto-toggle-track"></div>
+                  <div class="auto-toggle-thumb"></div>
+                </label>
+              </div>
+            </div>
+
+            <!-- ─ CARD 6: Security Camera ─ -->
+            <div class="dev-card is-on" data-id="d6" data-type="camera">
+              <div class="card-head">
+                <div class="card-icon"><i class="fa-solid fa-video"></i></div>
+                <div class="card-meta">
+                  <div class="card-name">Security Camera</div>
+                  <div class="card-room">
+                    <i
+                      class="fa-solid fa-location-dot"
+                      style="font-size: 8px; color: var(--muted)"
+                    ></i>
+                    Garden
+                  </div>
+                </div>
+                <span class="card-status online">Online</span>
+              </div>
+
+              <div class="card-controls">
+                <div class="cam-row">
+                  <span class="cam-badge live">Live</span>
+                  <span class="cam-res">1080p · 30fps</span>
+                </div>
+              </div>
+
+              <div class="card-toggle-row">
+                <span class="card-toggle-label">Recording</span>
+                <label class="toggle">
+                  <input
+                    type="checkbox"
+                    class="dev-power-toggle"
+                    data-id="d6"
+                    checked
+                  />
+                  <div class="toggle-track"></div>
+                  <div class="toggle-thumb"></div>
+                </label>
+              </div>
+
+              <div class="auto-toggle-row">
+                <span class="auto-toggle-label"
+                  ><i class="fa-solid fa-gears"></i> Auto Mode</span
+                >
+                <label class="auto-toggle">
+                  <input
+                    type="checkbox"
+                    class="dev-auto-toggle"
+                    data-id="d6"
+                    checked
+                  />
+                  <div class="auto-toggle-track"></div>
+                  <div class="auto-toggle-thumb"></div>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!-- /device-grid -->
+        </div>
+
+        <!-- 5. Control History Panel -->
+        <div class="history-panel">
+          <div class="history-head">
+            <div class="history-title">Control History</div>
+            <div class="history-device-name" id="history-device-name">
+              Living Room Light
+            </div>
+            <div class="history-device-sub" id="history-device-sub">
+              Living Room · LED Smart Bulb
+            </div>
+          </div>
+
+          <div class="history-list" id="history-list">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+      <!-- /devices-layout -->
+    </div>
+    <!-- /page-shell -->
+
+    <!-- Toast -->
+    <div class="ctrl-toast" id="ctrl-toast">
+      <i class="fa-solid fa-circle-check" id="toast-icon"></i>
+      <span id="toast-msg">Command executed</span>
+    </div>
+
+    <script src="script/sidebar.js"></script>
+    <script src="script/devices.js"></script>
+  </body>
+</html>
