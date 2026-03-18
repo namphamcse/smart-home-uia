@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard — Smart Home UIA</title>
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <!-- Shared sidebar -->
+    <link rel="stylesheet" href="../style/sidebar.css" />
+    <!-- Page styles -->
+    <link rel="stylesheet" href="../style/dashboard.css" />
+  </head>
+  <!-- data-role="admin" shows admin nav items -->
+  <body data-role="admin">
+    <!-- ① Sidebar (self-renders via sidebar.js) -->
+    <div id="app-sidebar"></div>
+
+    <!-- ② Page shell -->
+    <div class="page-shell">
+      <!-- Top bar -->
+      <div class="topbar">
+        <span class="topbar-title">Dashboard</span>
+        <span class="topbar-sub">— Overview</span>
+        <div class="topbar-spacer"></div>
+        <div class="topbar-clock" id="nav-clock">00:00:00</div>
+      </div>
+
+      <!-- Alert banner -->
+      <div class="alert-banner" id="alert-banner">
+        <div class="alert-dot"></div>
+        <i
+          class="fa-solid fa-triangle-exclamation"
+          style="flex-shrink: 0; font-size: 13px"
+        ></i>
+        <span class="alert-text"
+          >ALERT: Temperature 34.2°C — above safe threshold in Living Room</span
+        >
+        <span class="alert-time" id="alert-time">09:42</span>
+        <button class="alert-close" id="alert-close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Main content -->
+      <div class="main-content">
+        <!-- ROW 1 · SENSOR CARDS -->
+        <section>
+          <div class="section-head">
+            <div class="section-title">Live Sensors</div>
+            <span class="live-dot">Live</span>
+          </div>
+
+          <div class="sensor-grid">
+            <div class="sensor-card alert-state" id="sensor-temp">
+              <div class="sensor-top">
+                <div class="sensor-icon">
+                  <i class="fa-solid fa-temperature-half"></i>
+                </div>
+                <span class="sensor-name">Temperature</span>
+              </div>
+              <div class="sensor-value-row">
+                <span class="sensor-value">27.4</span>
+                <span class="sensor-unit">°C</span>
+              </div>
+              <div class="sensor-footer">
+                <span class="sensor-status alert">ALERT</span>
+                <div class="sensor-sparkline">
+                  <div class="spark-bar" style="height: 40%"></div>
+                  <div class="spark-bar" style="height: 52%"></div>
+                  <div class="spark-bar" style="height: 48%"></div>
+                  <div class="spark-bar" style="height: 65%"></div>
+                  <div class="spark-bar" style="height: 58%"></div>
+                  <div class="spark-bar" style="height: 72%"></div>
+                  <div class="spark-bar" style="height: 78%"></div>
+                  <div class="spark-bar" style="height: 90%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sensor-card warn-state" id="sensor-humidity">
+              <div class="sensor-top">
+                <div class="sensor-icon">
+                  <i class="fa-solid fa-droplet"></i>
+                </div>
+                <span class="sensor-name">Humidity</span>
+              </div>
+              <div class="sensor-value-row">
+                <span class="sensor-value">62.1</span>
+                <span class="sensor-unit">%</span>
+              </div>
+              <div class="sensor-footer">
+                <span class="sensor-status warning">WARNING</span>
+                <div class="sensor-sparkline">
+                  <div class="spark-bar" style="height: 48%"></div>
+                  <div class="spark-bar" style="height: 53%"></div>
+                  <div class="spark-bar" style="height: 49%"></div>
+                  <div class="spark-bar" style="height: 58%"></div>
+                  <div class="spark-bar" style="height: 56%"></div>
+                  <div class="spark-bar" style="height: 62%"></div>
+                  <div class="spark-bar" style="height: 66%"></div>
+                  <div class="spark-bar" style="height: 70%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sensor-card" id="sensor-light">
+              <div class="sensor-top">
+                <div class="sensor-icon"><i class="fa-solid fa-sun"></i></div>
+                <span class="sensor-name">Light Level</span>
+              </div>
+              <div class="sensor-value-row">
+                <span class="sensor-value">480</span>
+                <span class="sensor-unit">lux</span>
+              </div>
+              <div class="sensor-footer">
+                <span class="sensor-status normal">NORMAL</span>
+                <div class="sensor-sparkline">
+                  <div class="spark-bar" style="height: 28%"></div>
+                  <div class="spark-bar" style="height: 38%"></div>
+                  <div class="spark-bar" style="height: 52%"></div>
+                  <div class="spark-bar" style="height: 46%"></div>
+                  <div class="spark-bar" style="height: 44%"></div>
+                  <div class="spark-bar" style="height: 48%"></div>
+                  <div class="spark-bar" style="height: 50%"></div>
+                  <div class="spark-bar" style="height: 48%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ROW 2 · DEVICE STATUS + NOTIFICATIONS -->
+        <div class="mid-row">
+          <!-- Device Status -->
+          <div class="device-panel">
+            <div class="section-head">
+              <div class="section-title">Device Status</div>
+              <span class="section-meta" id="devices-online">5/6 Online</span>
+            </div>
+
+            <div class="device-list">
+              <div class="device-item on">
+                <div class="device-icon-box">
+                  <i class="fa-solid fa-lightbulb"></i>
+                </div>
+                <div class="device-info">
+                  <div class="device-name">
+                    Living Room Light
+                    <span class="device-badge on-badge">ON</span>
+                  </div>
+                  <div class="device-sub">Living Room · Smart Bulb</div>
+                </div>
+                <label class="toggle">
+                  <input
+                    type="checkbox"
+                    class="device-toggle"
+                    data-id="d1"
+                    checked
+                  />
+                  <div class="toggle-track"></div>
+                  <div class="toggle-thumb"></div>
+                </label>
+              </div>
+
+              <div class="device-item">
+                <div class="device-icon-box">
+                  <i class="fa-solid fa-lightbulb"></i>
+                </div>
+                <div class="device-info">
+                  <div class="device-name">
+                    Bedroom Light
+                    <span class="device-badge off-badge">OFF</span>
+                  </div>
+                  <div class="device-sub">Bedroom · Smart Bulb</div>
+                </div>
+                <label class="toggle">
+                  <input type="checkbox" class="device-toggle" data-id="d2" />
+                  <div class="toggle-track"></div>
+                  <div class="toggle-thumb"></div>
+                </label>
+              </div>
+
+              <div class="device-item on">
+                <div class="device-icon-box">
+                  <i class="fa-solid fa-fan"></i>
+                </div>
+                <div class="device-info">
+                  <div class="device-name">
+                    Ceiling Fan <span class="device-badge on-badge">ON</span>
+                  </div>
+                  <div class="device-sub">Living Room · 3-speed</div>
+                </div>
+                <label class="toggle">
+                  <input
+                    type="checkbox"
+                    class="device-toggle"
+                    data-id="d3"
+                    checked
+                  />
+                  <div class="toggle-track"></div>
+                  <div class="toggle-thumb"></div>
+                </label>
+              </div>
+
+              <div class="device-item">
+                <div class="device-icon-box">
+                  <i class="fa-solid fa-door-closed"></i>
+                </div>
+                <div class="device-info">
+                  <div class="device-name">
+                    Front Door
+                    <span class="device-badge off-badge">UNLOCKED</span>
+                  </div>
+                  <div class="device-sub">Entrance · Smart Lock</div>
+                </div>
+                <label class="toggle">
+                  <input type="checkbox" class="device-toggle" data-id="d4" />
+                  <div class="toggle-track"></div>
+                  <div class="toggle-thumb"></div>
+                </label>
+              </div>
+
+              <div class="device-item">
+                <div class="device-icon-box">
+                  <i class="fa-solid fa-snowflake"></i>
+                </div>
+                <div class="device-info">
+                  <div class="device-name">
+                    AC Unit <span class="device-badge off-badge">OFF</span>
+                  </div>
+                  <div class="device-sub">Bedroom · 18000 BTU</div>
+                </div>
+                <label class="toggle">
+                  <input type="checkbox" class="device-toggle" data-id="d5" />
+                  <div class="toggle-track"></div>
+                  <div class="toggle-thumb"></div>
+                </label>
+              </div>
+
+              <div class="device-item on">
+                <div class="device-icon-box">
+                  <i class="fa-solid fa-video"></i>
+                </div>
+                <div class="device-info">
+                  <div class="device-name">
+                    Security Camera
+                    <span class="device-badge on-badge">ON</span>
+                  </div>
+                  <div class="device-sub">Garden · 1080p Live</div>
+                </div>
+                <label class="toggle">
+                  <input
+                    type="checkbox"
+                    class="device-toggle"
+                    data-id="d6"
+                    checked
+                  />
+                  <div class="toggle-track"></div>
+                  <div class="toggle-thumb"></div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Notifications -->
+          <div class="notif-panel">
+            <div class="section-head">
+              <div class="section-title">Recent Alerts</div>
+              <span class="section-meta">Last 24 hours</span>
+            </div>
+
+            <div class="notif-list">
+              <div class="notif-item">
+                <div class="notif-dot alert"></div>
+                <div class="notif-body">
+                  <div class="notif-msg">
+                    Temperature exceeded threshold (34°C) in Living Room
+                  </div>
+                  <div class="notif-time">2 min ago</div>
+                </div>
+                <div class="notif-type-tag tag-alert">Alert</div>
+              </div>
+
+              <div class="notif-item">
+                <div class="notif-dot system"></div>
+                <div class="notif-body">
+                  <div class="notif-msg">
+                    Yolo:Bit connection re-established successfully
+                  </div>
+                  <div class="notif-time">14 min ago</div>
+                </div>
+                <div class="notif-type-tag tag-system">System</div>
+              </div>
+
+              <div class="notif-item">
+                <div class="notif-dot warning"></div>
+                <div class="notif-body">
+                  <div class="notif-msg">
+                    Humidity rising rapidly — now at 62%, trend upward
+                  </div>
+                  <div class="notif-time">28 min ago</div>
+                </div>
+                <div class="notif-type-tag tag-warning">Warning</div>
+              </div>
+
+              <div class="notif-item">
+                <div class="notif-dot alert"></div>
+                <div class="notif-body">
+                  <div class="notif-msg">
+                    Motion detected at Front Door sensor (Zone 1)
+                  </div>
+                  <div class="notif-time">45 min ago</div>
+                </div>
+                <div class="notif-type-tag tag-alert">Alert</div>
+              </div>
+
+              <div class="notif-item">
+                <div class="notif-dot success"></div>
+                <div class="notif-body">
+                  <div class="notif-msg">
+                    Auto-mode lights OFF at 23:00 completed
+                  </div>
+                  <div class="notif-time">1 hr ago</div>
+                </div>
+                <div class="notif-type-tag tag-success">OK</div>
+              </div>
+
+              <div class="notif-item">
+                <div class="notif-dot system"></div>
+                <div class="notif-body">
+                  <div class="notif-msg">
+                    Firmware update available for Yolo:Bit v2.4.1
+                  </div>
+                  <div class="notif-time">3 hr ago</div>
+                </div>
+                <div class="notif-type-tag tag-system">System</div>
+              </div>
+
+              <div class="notif-item">
+                <div class="notif-dot warning"></div>
+                <div class="notif-body">
+                  <div class="notif-msg">
+                    Living Room Light has been ON for over 6 hours
+                  </div>
+                  <div class="notif-time">4 hr ago</div>
+                </div>
+                <div class="notif-type-tag tag-warning">Warning</div>
+              </div>
+
+              <div class="notif-item">
+                <div class="notif-dot success"></div>
+                <div class="notif-body">
+                  <div class="notif-msg">
+                    Daily energy report generated and saved
+                  </div>
+                  <div class="notif-time">6 hr ago</div>
+                </div>
+                <div class="notif-type-tag tag-success">OK</div>
+              </div>
+            </div>
+
+            <a href="notifications.html" class="btn-view-all">
+              <i
+                class="fa-solid fa-list"
+                style="margin-right: 5px; font-size: 9px"
+              ></i>
+              View All Notifications
+            </a>
+          </div>
+        </div>
+
+        <!-- ROW 3 · QUICK ACTIONS -->
+        <section>
+          <div class="section-head">
+            <div class="section-title">Quick Actions</div>
+            <span class="section-meta">Tap to toggle</span>
+          </div>
+
+          <div class="quick-actions-grid">
+            <button class="qa-btn danger-qa" data-qa="all-lights-off">
+              <div class="qa-icon-box">
+                <i class="fa-solid fa-power-off"></i>
+              </div>
+              <span class="qa-label">All Lights Off</span>
+              <span class="qa-state">INSTANT</span>
+            </button>
+
+            <button class="qa-btn" data-qa="lock-door">
+              <div class="qa-icon-box"><i class="fa-solid fa-lock"></i></div>
+              <span class="qa-label">Lock Front Door</span>
+              <span class="qa-state">UNLOCKED</span>
+            </button>
+
+            <button class="qa-btn active-qa" data-qa="auto-mode">
+              <div class="qa-icon-box"><i class="fa-solid fa-gears"></i></div>
+              <span class="qa-label">Auto Mode</span>
+              <span class="qa-state on">ON</span>
+            </button>
+
+            <button class="qa-btn" data-qa="night-mode">
+              <div class="qa-icon-box"><i class="fa-solid fa-moon"></i></div>
+              <span class="qa-label">Night Mode</span>
+              <span class="qa-state">OFF</span>
+            </button>
+
+            <button class="qa-btn" data-qa="eco-mode">
+              <div class="qa-icon-box"><i class="fa-solid fa-leaf"></i></div>
+              <span class="qa-label">Eco Mode</span>
+              <span class="qa-state">OFF</span>
+            </button>
+          </div>
+        </section>
+      </div>
+      <!-- /main-content -->
+
+      <!-- Status bar -->
+      <footer class="status-bar">
+        <div class="status-seg">
+          <i
+            class="fa-solid fa-microchip"
+            style="color: rgba(255, 255, 255, 0.4); font-size: 10px"
+          ></i>
+          <span class="status-label">Devices</span>
+          <span class="status-val" id="devices-online-bar">5/6 Online</span>
+        </div>
+        <div class="status-seg">
+          <div class="status-pill">
+            <div class="status-led"></div>
+            <i class="fa-solid fa-wifi" style="font-size: 9px"></i>
+            Yolo:Bit Connected
+          </div>
+        </div>
+        <div class="status-seg">
+          <span class="status-label">Protocol</span>
+          <span class="status-val">MQTT v3.1.1</span>
+        </div>
+        <div class="status-seg">
+          <i
+            class="fa-solid fa-signal"
+            style="color: var(--success); font-size: 10px"
+          ></i>
+          <span class="status-label">Ping</span>
+          <span class="status-val">12 ms</span>
+        </div>
+        <div class="status-seg">
+          <i
+            class="fa-regular fa-clock"
+            style="color: rgba(255, 255, 255, 0.4); font-size: 10px"
+          ></i>
+          <span class="status-update-time" id="last-update"
+            >Updated just now</span
+          >
+        </div>
+      </footer>
+    </div>
+    <!-- /page-shell -->
+
+    <!-- Notification drawer -->
+    <div class="drawer-overlay" id="drawer-overlay"></div>
+    <aside class="notif-drawer" id="notif-drawer">
+      <div class="drawer-head">
+        <span class="drawer-title">All Notifications</span>
+        <button class="drawer-close" id="drawer-close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="drawer-list">
+        <div class="drawer-item">
+          <div class="drawer-dot alert"></div>
+          <div>
+            <div class="drawer-msg">
+              Temperature exceeded threshold (34°C) in Living Room
+            </div>
+            <div class="drawer-time">Today · 09:42</div>
+          </div>
+        </div>
+        <div class="drawer-item">
+          <div class="drawer-dot system"></div>
+          <div>
+            <div class="drawer-msg">
+              Yolo:Bit connection re-established successfully
+            </div>
+            <div class="drawer-time">Today · 09:30</div>
+          </div>
+        </div>
+        <div class="drawer-item">
+          <div class="drawer-dot warning"></div>
+          <div>
+            <div class="drawer-msg">
+              Humidity rising rapidly — now at 62%, trend upward
+            </div>
+            <div class="drawer-time">Today · 09:16</div>
+          </div>
+        </div>
+        <div class="drawer-item">
+          <div class="drawer-dot alert"></div>
+          <div>
+            <div class="drawer-msg">
+              Motion detected at Front Door sensor (Zone 1)
+            </div>
+            <div class="drawer-time">Today · 08:59</div>
+          </div>
+        </div>
+        <div class="drawer-item">
+          <div class="drawer-dot success"></div>
+          <div>
+            <div class="drawer-msg">
+              Auto-mode lights OFF at 23:00 completed
+            </div>
+            <div class="drawer-time">Today · 08:45</div>
+          </div>
+        </div>
+        <div class="drawer-item">
+          <div class="drawer-dot system"></div>
+          <div>
+            <div class="drawer-msg">
+              Firmware update available for Yolo:Bit v2.4.1
+            </div>
+            <div class="drawer-time">Today · 06:30</div>
+          </div>
+        </div>
+        <div class="drawer-item">
+          <div class="drawer-dot warning"></div>
+          <div>
+            <div class="drawer-msg">
+              Living Room Light has been ON for over 6 hours
+            </div>
+            <div class="drawer-time">Today · 05:15</div>
+          </div>
+        </div>
+        <div class="drawer-item">
+          <div class="drawer-dot success"></div>
+          <div>
+            <div class="drawer-msg">
+              Daily energy report generated and saved
+            </div>
+            <div class="drawer-time">Today · 03:00</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Scripts: sidebar first, then page logic -->
+    <script src="../script/dashboard.js"></script>
+    <script src="../script/sidebar.js"></script>
+  </body>
+</html>

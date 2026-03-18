@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Environment — Smart Home UIA</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../style/sidebar.css" />
+    <link rel="stylesheet" href="../style/environment.css" />
+  </head>
+  <body data-role="admin">
+    <div id="app-sidebar"></div>
+
+    <div class="page-shell">
+      <!-- Topbar -->
+      <div class="topbar">
+        <span class="topbar-title">Environment</span>
+        <span class="topbar-sub">— Sensor Monitoring</span>
+        <div class="topbar-spacer"></div>
+        <div class="topbar-clock" id="nav-clock">00:00:00</div>
+      </div>
+
+      <!-- 2. Sensor Overview Bar -->
+      <div class="overview-bar">
+        <div class="ov-seg temp-seg">
+          <div class="ov-icon">
+            <i class="fa-solid fa-temperature-half"></i>
+          </div>
+          <span class="ov-label">Temp</span>
+          <span class="ov-val" id="ov-temp">27.4</span>
+          <span class="ov-unit">°C</span>
+          <span class="ov-status alert ov-blink" id="ov-temp-status"
+            >ALERT</span
+          >
+          <div class="update-dot"></div>
+        </div>
+
+        <div class="ov-seg hum-seg">
+          <div class="ov-icon"><i class="fa-solid fa-droplet"></i></div>
+          <span class="ov-label">Humidity</span>
+          <span class="ov-val" id="ov-hum">62.1</span>
+          <span class="ov-unit">%</span>
+          <span class="ov-status warning" id="ov-hum-status">WARN</span>
+          <div class="update-dot"></div>
+        </div>
+
+        <div class="ov-seg light-seg">
+          <div class="ov-icon"><i class="fa-solid fa-sun"></i></div>
+          <span class="ov-label">Light</span>
+          <span class="ov-val" id="ov-light">480</span>
+          <span class="ov-unit">lux</span>
+          <span class="ov-status normal" id="ov-light-status">OK</span>
+          <div class="update-dot"></div>
+        </div>
+      </div>
+
+      <!-- Main content -->
+      <div class="env-content">
+        <!-- 3. Sensor Detail Cards -->
+        <div class="sensor-cards-row">
+          <!-- Temperature -->
+          <div
+            class="scard temp-card alert-state active"
+            data-sensor="temp"
+            id="scard-temp"
+          >
+            <div class="scard-top">
+              <div class="scard-icon">
+                <i class="fa-solid fa-temperature-half"></i>
+              </div>
+              <div>
+                <div class="scard-name">Temperature</div>
+              </div>
+            </div>
+            <div class="scard-value-row">
+              <span class="scard-value" id="sc-temp-val">27.4</span>
+              <span class="scard-unit">°C</span>
+            </div>
+            <div class="scard-minmax">
+              <div class="minmax-chip min-chip">
+                <i class="fa-solid fa-arrow-down" style="font-size: 7px"></i>
+                MIN <span id="sc-temp-min">22.1</span>°
+              </div>
+              <span class="minmax-sep">/</span>
+              <div class="minmax-chip max-chip">
+                <i class="fa-solid fa-arrow-up" style="font-size: 7px"></i> MAX
+                <span id="sc-temp-max">34.2</span>°
+              </div>
+              <span class="scard-badge alert" id="sc-temp-badge">ALERT</span>
+            </div>
+          </div>
+
+          <!-- Humidity -->
+          <div
+            class="scard hum-card warn-state"
+            data-sensor="hum"
+            id="scard-hum"
+          >
+            <div class="scard-top">
+              <div class="scard-icon"><i class="fa-solid fa-droplet"></i></div>
+              <div>
+                <div class="scard-name">Humidity</div>
+              </div>
+            </div>
+            <div class="scard-value-row">
+              <span class="scard-value" id="sc-hum-val">62.1</span>
+              <span class="scard-unit">%</span>
+            </div>
+            <div class="scard-minmax">
+              <div class="minmax-chip min-chip">
+                <i class="fa-solid fa-arrow-down" style="font-size: 7px"></i>
+                MIN <span id="sc-hum-min">45.0</span>%
+              </div>
+              <span class="minmax-sep">/</span>
+              <div class="minmax-chip max-chip">
+                <i class="fa-solid fa-arrow-up" style="font-size: 7px"></i> MAX
+                <span id="sc-hum-max">74.3</span>%
+              </div>
+              <span class="scard-badge warning" id="sc-hum-badge">WARN</span>
+            </div>
+          </div>
+
+          <!-- Light -->
+          <div class="scard light-card" data-sensor="light" id="scard-light">
+            <div class="scard-top">
+              <div class="scard-icon"><i class="fa-solid fa-sun"></i></div>
+              <div>
+                <div class="scard-name">Light Level</div>
+              </div>
+            </div>
+            <div class="scard-value-row">
+              <span class="scard-value" id="sc-light-val">480</span>
+              <span class="scard-unit">lux</span>
+            </div>
+            <div class="scard-minmax">
+              <div class="minmax-chip min-chip">
+                <i class="fa-solid fa-arrow-down" style="font-size: 7px"></i>
+                MIN <span id="sc-light-min">12</span>
+              </div>
+              <span class="minmax-sep">/</span>
+              <div class="minmax-chip max-chip">
+                <i class="fa-solid fa-arrow-up" style="font-size: 7px"></i> MAX
+                <span id="sc-light-max">892</span>
+              </div>
+              <span class="scard-badge normal" id="sc-light-badge">OK</span>
+            </div>
+          </div>
+        </div>
+        <!-- /sensor-cards-row -->
+
+        <!-- Bottom section -->
+        <div class="bottom-section">
+          <!-- 4. Historical Chart -->
+          <div class="chart-panel">
+            <div class="chart-controls">
+              <div class="chart-sensor-tabs">
+                <button class="cs-tab temp-tab active" data-sensor="temp">
+                  Temp
+                </button>
+                <button class="cs-tab hum-tab" data-sensor="hum">
+                  Humidity
+                </button>
+                <button class="cs-tab light-tab" data-sensor="light">
+                  Light
+                </button>
+              </div>
+
+              <div class="time-tabs">
+                <button class="t-tab active" data-range="1h">1H</button>
+                <button class="t-tab" data-range="6h">6H</button>
+                <button class="t-tab" data-range="24h">24H</button>
+                <button class="t-tab" data-range="7d">7D</button>
+              </div>
+
+              <!-- 7. Export -->
+              <button class="btn-export" id="btn-export-csv">
+                <i class="fa-solid fa-file-csv"></i> CSV
+              </button>
+              <button
+                class="btn-export"
+                id="btn-export-pdf"
+                style="border-color: var(--border)"
+              >
+                <i class="fa-solid fa-file-pdf"></i> PDF
+              </button>
+            </div>
+
+            <div class="chart-canvas-wrap">
+              <canvas id="sensor-chart"></canvas>
+            </div>
+
+            <div class="chart-legend">
+              <div class="legend-item">
+                <div class="legend-line data-line" id="legend-data-line"></div>
+                <span id="legend-sensor-name">Temperature (°C)</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-line warn-line"></div>
+                <span>Warning threshold</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-line alert-line"></div>
+                <span>Alert threshold</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right column -->
+          <div class="right-col">
+            <!-- 5. Alert Threshold Panel -->
+            <div class="threshold-panel">
+              <div class="sec-label" style="margin-bottom: 8px">
+                Alert Thresholds
+              </div>
+
+              <div class="thresh-sensor-row">
+                <button class="thresh-sensor-btn active" data-tsensor="temp">
+                  Temp
+                </button>
+                <button class="thresh-sensor-btn" data-tsensor="hum">
+                  Humid
+                </button>
+                <button class="thresh-sensor-btn" data-tsensor="light">
+                  Light
+                </button>
+              </div>
+
+              <div class="thresh-inputs">
+                <div class="thresh-field">
+                  <label>Min Threshold</label>
+                  <input type="number" id="thresh-min" value="18" />
+                </div>
+                <div class="thresh-field">
+                  <label>Max Threshold</label>
+                  <input type="number" id="thresh-max" value="34" />
+                </div>
+              </div>
+
+              <div class="thresh-bottom-row">
+                <label class="thresh-alert-toggle">
+                  <label class="mini-toggle">
+                    <input type="checkbox" id="thresh-alert-toggle" checked />
+                    <div class="mini-toggle-track"></div>
+                    <div class="mini-toggle-thumb"></div>
+                  </label>
+                  Alert Enabled
+                </label>
+                <button class="btn-save-thresh" id="btn-save-thresh">
+                  <i class="fa-solid fa-floppy-disk"></i> Save
+                </button>
+              </div>
+            </div>
+
+            <!-- 6. Sensor Status Log -->
+            <div class="log-panel">
+              <div class="sec-label" style="margin-bottom: 8px">Status Log</div>
+
+              <div class="log-filter-row">
+                <button class="log-filter-btn active" data-logfilter="all">
+                  All
+                </button>
+                <button class="log-filter-btn" data-logfilter="threshold">
+                  Threshold
+                </button>
+                <button class="log-filter-btn" data-logfilter="disconnect">
+                  Disconnect
+                </button>
+                <button class="log-filter-btn" data-logfilter="restore">
+                  Restore
+                </button>
+              </div>
+
+              <div class="log-list" id="log-list">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </div>
+          <!-- /right-col -->
+        </div>
+        <!-- /bottom-section -->
+      </div>
+      <!-- /env-content -->
+    </div>
+    <!-- /page-shell -->
+
+    <!-- Toast -->
+    <div class="env-toast" id="env-toast">
+      <i class="fa-solid fa-circle-check" id="env-toast-icon"></i>
+      <span id="env-toast-msg">Saved</span>
+    </div>
+
+    <script src="../script/sidebar.js"></script>
+    <script src="../script/environment.js"></script>
+  </body>
+</html>

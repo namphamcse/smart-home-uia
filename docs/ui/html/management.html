@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Management — Smart Home UIA</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../style/sidebar.css" />
+    <link rel="stylesheet" href="../style/management.css" />
+  </head>
+  <body data-role="admin">
+    <div id="app-sidebar"></div>
+
+    <div class="page-shell">
+      <!-- Topbar -->
+      <div class="topbar">
+        <span class="topbar-title">Management</span>
+        <span class="topbar-sub">— System Administration</span>
+        <div class="topbar-spacer"></div>
+        <div class="topbar-clock" id="nav-clock">00:00:00</div>
+      </div>
+
+      <!-- 2. Summary Cards -->
+      <div class="summary-row">
+        <div class="sum-card card-users">
+          <div class="sum-icon"><i class="fa-solid fa-users"></i></div>
+          <div class="sum-meta">
+            <div class="sum-label">Total Users</div>
+            <div class="sum-val" id="sum-users">3</div>
+            <div class="sum-sub">1 admin · 2 users</div>
+          </div>
+        </div>
+        <div class="sum-card card-online">
+          <div class="sum-icon"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="sum-meta">
+            <div class="sum-label">Devices Online</div>
+            <div class="sum-val" id="sum-online">5</div>
+            <div class="sum-sub">
+              of <span id="sum-total-dev">7</span> total
+            </div>
+          </div>
+        </div>
+        <div class="sum-card card-offline">
+          <div class="sum-icon"><i class="fa-solid fa-circle-xmark"></i></div>
+          <div class="sum-meta">
+            <div class="sum-label">Offline / Error</div>
+            <div class="sum-val" id="sum-offline">2</div>
+            <div class="sum-sub">requires attention</div>
+          </div>
+        </div>
+        <div class="sum-card card-errors">
+          <div class="sum-icon">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <div class="sum-meta">
+            <div class="sum-label">Errors (24 h)</div>
+            <div class="sum-val" id="sum-errors">4</div>
+            <div class="sum-sub">2 critical</div>
+          </div>
+        </div>
+        <div class="sum-card card-uptime">
+          <div class="sum-icon"><i class="fa-solid fa-server"></i></div>
+          <div class="sum-meta">
+            <div class="sum-label">System Uptime</div>
+            <div class="sum-val">99.3%</div>
+            <div class="sum-sub">last 7 days</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Tab Navigation -->
+      <div class="tab-nav">
+        <button class="tab-btn active" data-tab="devices">
+          <i class="fa-solid fa-sliders"></i>
+          Devices
+          <span class="tab-badge" id="tab-badge-devices">7</span>
+        </button>
+        <button class="tab-btn" data-tab="syslog">
+          <i class="fa-solid fa-terminal"></i>
+          System Log
+          <span class="tab-badge" id="tab-badge-log">0</span>
+        </button>
+      </div>
+
+      <!-- Tab Content -->
+      <div class="tab-content">
+        <!-- ════ TAB: DEVICES ════ -->
+        <div class="tab-panel active" id="tab-devices">
+          <!-- 4. Device Search & Filter -->
+          <div class="toolbar">
+            <div class="search-wrap">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input
+                type="text"
+                class="search-input"
+                id="dev-search"
+                placeholder="Search devices…"
+              />
+            </div>
+
+            <div class="tb-sep"></div>
+
+            <span
+              style="
+                font-family: var(--font-head);
+                font-size: 9px;
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                color: var(--muted);
+              "
+              >Type:</span
+            >
+            <button class="filter-btn active" data-dtype="all">All</button>
+            <button class="filter-btn" data-dtype="light">
+              <i class="fa-solid fa-lightbulb"></i> Light
+            </button>
+            <button class="filter-btn" data-dtype="fan">
+              <i class="fa-solid fa-fan"></i> Fan
+            </button>
+            <button class="filter-btn" data-dtype="door">
+              <i class="fa-solid fa-door-closed"></i> Door
+            </button>
+            <button class="filter-btn" data-dtype="ac">
+              <i class="fa-solid fa-snowflake"></i> AC
+            </button>
+            <button class="filter-btn" data-dtype="camera">
+              <i class="fa-solid fa-video"></i> Camera
+            </button>
+            <button class="filter-btn" data-dtype="sensor">
+              <i class="fa-solid fa-microchip"></i> Sensor
+            </button>
+
+            <div class="tb-sep"></div>
+
+            <button class="filter-btn f-online" data-dstatus="online">
+              <i
+                class="fa-solid fa-circle"
+                style="font-size: 7px; color: var(--success)"
+              ></i>
+              Online
+            </button>
+            <button class="filter-btn f-offline" data-dstatus="offline">
+              <i
+                class="fa-solid fa-circle"
+                style="font-size: 7px; color: var(--muted)"
+              ></i>
+              Offline
+            </button>
+            <button class="filter-btn f-error" data-dstatus="error">
+              <i
+                class="fa-solid fa-circle"
+                style="font-size: 7px; color: var(--error)"
+              ></i>
+              Error
+            </button>
+
+            <div class="tb-spacer"></div>
+
+            <!-- 6. Add Device -->
+            <button class="btn-primary" id="btn-add-device">
+              <i class="fa-solid fa-plus"></i> Add Device
+            </button>
+          </div>
+
+          <!-- 5. Device Table -->
+          <div class="table-wrap">
+            <table id="device-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Device Name</th>
+                  <th>Type</th>
+                  <th>GPIO Pin</th>
+                  <th>Location</th>
+                  <th>Connection</th>
+                  <th>State</th>
+                  <th>Last Seen</th>
+                  <th style="text-align: center">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="device-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <!-- /tab-devices -->
+
+        <!-- ════ TAB: SYSTEM LOG ════ -->
+        <div class="tab-panel" id="tab-syslog">
+          <!-- 8. Log Filter Bar -->
+          <div class="toolbar">
+            <div class="search-wrap">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input
+                type="text"
+                class="search-input"
+                id="log-search"
+                placeholder="Search log…"
+              />
+            </div>
+
+            <div class="tb-sep"></div>
+
+            <span
+              style="
+                font-family: var(--font-head);
+                font-size: 9px;
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                color: var(--muted);
+              "
+              >Event:</span
+            >
+            <button class="filter-btn active" data-ltype="all">All</button>
+            <button class="filter-btn" data-ltype="connection">
+              Connection
+            </button>
+            <button class="filter-btn" data-ltype="error">Error</button>
+            <button class="filter-btn" data-ltype="command">Command</button>
+            <button class="filter-btn" data-ltype="restart">Restart</button>
+
+            <div class="tb-sep"></div>
+
+            <select class="log-select" id="log-device-filter">
+              <option value="all">All Devices</option>
+            </select>
+
+            <input
+              type="date"
+              class="date-input"
+              id="log-date-from"
+              title="From date"
+            />
+            <span
+              style="
+                font-family: var(--font-head);
+                font-size: 10px;
+                font-weight: 700;
+                color: var(--muted);
+              "
+              >—</span
+            >
+            <input
+              type="date"
+              class="date-input"
+              id="log-date-to"
+              title="To date"
+            />
+
+            <div class="tb-spacer"></div>
+
+            <!-- 10. Export -->
+            <button class="btn-secondary" id="btn-export-log">
+              <i class="fa-solid fa-file-csv"></i> Export CSV
+            </button>
+          </div>
+
+          <!-- 9. Log Table -->
+          <div class="table-wrap">
+            <table id="log-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Event Type</th>
+                  <th>Device</th>
+                  <th>User</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody id="log-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <!-- /tab-syslog -->
+      </div>
+      <!-- /tab-content -->
+    </div>
+    <!-- /page-shell -->
+
+    <!-- 6. Add/Edit Device Modal -->
+    <div class="modal-overlay" id="device-modal-overlay">
+      <div class="modal">
+        <div class="modal-head">
+          <div class="modal-head-icon">
+            <i class="fa-solid fa-microchip"></i>
+          </div>
+          <div class="modal-title" id="device-modal-title">Add New Device</div>
+          <button class="modal-close" id="device-modal-close">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label">Device Name</label>
+              <input
+                type="text"
+                class="form-input"
+                id="f-dev-name"
+                placeholder="e.g. Kitchen Light"
+              />
+            </div>
+            <div class="form-field">
+              <label class="form-label">Device Type</label>
+              <select class="form-select" id="f-dev-type">
+                <option value="light">Light</option>
+                <option value="fan">Fan</option>
+                <option value="door">Door</option>
+                <option value="ac">AC</option>
+                <option value="camera">Camera</option>
+                <option value="sensor">Sensor</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label">GPIO Pin</label>
+              <input
+                type="text"
+                class="form-input"
+                id="f-dev-gpio"
+                placeholder="e.g. GPIO18"
+              />
+            </div>
+            <div class="form-field">
+              <label class="form-label">Location</label>
+              <input
+                type="text"
+                class="form-input"
+                id="f-dev-location"
+                placeholder="e.g. Kitchen"
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label">Connection Status</label>
+              <select class="form-select" id="f-dev-conn">
+                <option value="online">Online</option>
+                <option value="offline">Offline</option>
+                <option value="error">Error</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label">Initial State</label>
+              <select class="form-select" id="f-dev-state">
+                <option value="on">ON</option>
+                <option value="off">OFF</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-save" id="btn-save-device">
+            <i class="fa-solid fa-floppy-disk"></i> Save Device
+          </button>
+          <button class="btn-cancel" id="btn-cancel-device">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Restart Confirm -->
+    <div class="confirm-overlay" id="restart-overlay">
+      <div class="confirm-box">
+        <div class="confirm-icon">
+          <i class="fa-solid fa-rotate" style="color: var(--warning)"></i>
+        </div>
+        <div class="confirm-title">Restart Device?</div>
+        <div class="confirm-sub" id="restart-sub">
+          This will restart the selected device.
+        </div>
+        <div class="confirm-warning">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          The device will temporarily disconnect from the MQTT broker and may
+          take up to 15 seconds to reconnect. Any active automation rules will
+          be paused during restart.
+        </div>
+        <div class="confirm-btns">
+          <button class="btn-confirm-ok restart-ok" id="btn-confirm-restart">
+            <i class="fa-solid fa-rotate"></i> Restart
+          </button>
+          <button class="btn-confirm-cancel" id="btn-cancel-restart">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Confirm -->
+    <div class="confirm-overlay" id="delete-overlay">
+      <div class="confirm-box">
+        <div class="confirm-icon">
+          <i class="fa-solid fa-trash" style="color: var(--error)"></i>
+        </div>
+        <div class="confirm-title">Delete Device?</div>
+        <div class="confirm-sub" id="delete-sub">
+          This will permanently remove the device.
+        </div>
+        <div class="confirm-warning">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          All automation rules linked to this device will also be disabled. This
+          action cannot be undone.
+        </div>
+        <div class="confirm-btns">
+          <button class="btn-confirm-ok delete-ok" id="btn-confirm-delete">
+            <i class="fa-solid fa-trash"></i> Delete
+          </button>
+          <button class="btn-confirm-cancel" id="btn-cancel-delete">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="mgmt-toast" id="mgmt-toast">
+      <i class="fa-solid fa-circle-check" id="toast-icon"></i>
+      <span id="toast-msg">Done</span>
+    </div>
+
+    <script src="../script/sidebar.js"></script>
+    <script src="../script/management.js"></script>
+  </body>
+</html>

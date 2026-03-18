@@ -1,0 +1,451 @@
+/* ─────────────────────────────────────────
+   Smart Home UIA — Sidebar Nav (shared)
+───────────────────────────────────────── */
+
+:root {
+  --sidebar-w: 216px;
+}
+
+/* ── Shell layout ─────────────────────── */
+/* Applied to body from sidebar.js */
+body.has-sidebar {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  overflow: hidden;
+}
+
+.page-shell {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── Sidebar container ───────────────── */
+.app-sidebar {
+  width: var(--sidebar-w);
+  min-width: var(--sidebar-w);
+  height: 100vh;
+  background: #111111;
+  border-right: 3px solid #000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 100;
+}
+
+/* ── Logo area ───────────────────────── */
+.sb-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 16px 14px;
+  border-bottom: 3px solid rgba(255, 255, 255, 0.12);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.sb-logo-mark {
+  width: 34px;
+  height: 34px;
+  background: var(--accent, #facc15);
+  border: 3px solid #000;
+  box-shadow: 2px 2px 0 #000;
+  font-family: var(--font-head, "Space Grotesk", sans-serif);
+  font-weight: 800;
+  font-size: 15px;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+
+.sb-logo:hover .sb-logo-mark {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 #000;
+}
+
+.sb-logo-text {
+  font-family: var(--font-head, "Space Grotesk", sans-serif);
+  font-size: 13px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.3px;
+  line-height: 1.15;
+}
+
+.sb-logo-text span {
+  display: block;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 1px;
+}
+
+/* ── Nav sections ────────────────────── */
+.sb-nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px 10px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sb-nav::-webkit-scrollbar {
+  width: 3px;
+}
+.sb-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sb-nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.sb-section-label {
+  font-family: var(--font-head, "Space Grotesk", sans-serif);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.3);
+  padding: 6px 8px 4px;
+  margin-top: 4px;
+}
+
+.sb-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 8px 0;
+  border: none;
+}
+
+/* ── Nav item ────────────────────────── */
+.sb-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  text-decoration: none;
+  position: relative;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition:
+    background 0.15s,
+    border-color 0.12s,
+    transform 0.1s;
+  border-radius: 0;
+}
+
+.sb-item:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.sb-item.active {
+  background: var(--accent, #facc15);
+  border: 2px solid #000;
+  box-shadow: 2px 2px 0 #000;
+}
+
+.sb-item.active:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 #000;
+}
+
+.sb-item-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+
+.sb-item.active .sb-item-icon {
+  color: #000;
+}
+
+.sb-item:hover:not(.active) .sb-item-icon {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.sb-item-label {
+  font-family: var(--font-head, "Space Grotesk", sans-serif);
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.15s;
+  flex: 1;
+}
+
+.sb-item.active .sb-item-label {
+  color: #000;
+}
+.sb-item:hover:not(.active) .sb-item-label {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ── Notification badge ──────────────── */
+.sb-badge {
+  min-width: 18px;
+  height: 18px;
+  background: var(--error, #ef4444);
+  border: 2px solid #000;
+  font-family: var(--font-head, "Space Grotesk", sans-serif);
+  font-size: 9px;
+  font-weight: 800;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  animation: pulse-badge 2s infinite;
+  flex-shrink: 0;
+}
+
+.sb-item.active .sb-badge {
+  border-color: #000;
+  background: #000;
+  color: var(--accent, #facc15);
+}
+
+@keyframes pulse-badge {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+/* ── Admin section tag ───────────────── */
+.sb-admin-tag {
+  display: inline-block;
+  font-family: var(--font-head, "Space Grotesk", sans-serif);
+  font-size: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 1px 5px;
+  background: var(--primary, #2563eb);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* ── User footer ─────────────────────── */
+.sb-footer {
+  border-top: 3px solid rgba(255, 255, 255, 0.12);
+  padding: 10px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.sb-user-chip {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition:
+    background 0.15s,
+    border-color 0.12s;
+  user-select: none;
+}
+
+.sb-user-chip:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.sb-user-chip.open {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.sb-avatar {
+  width: 30px;
+  height: 30px;
+  background: var(--primary, #2563eb);
+  border: 2px solid #fff;
+  color: #fff;
+  font-family: var(--font-head, "Space Grotesk", sans-serif);
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sb-user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.sb-user-name {
+  font-family: var(--font-head, "Space Grotesk", sans-serif);
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sb-user-role {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 1px;
+}
+
+.sb-chevron {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.35);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.sb-user-chip.open .sb-chevron {
+  transform: rotate(180deg);
+}
+
+/* ── Dropdown menu ───────────────────── */
+.sb-dropdown {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 10px;
+  right: 10px;
+  background: #fff;
+  border: 3px solid #000;
+  box-shadow: 4px 4px 0 #000;
+  overflow: hidden;
+  transform-origin: bottom center;
+  transform: scaleY(0.85) translateY(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 0.18s ease,
+    opacity 0.15s ease;
+  z-index: 200;
+}
+
+.sb-dropdown.open {
+  transform: scaleY(1) translateY(0);
+  opacity: 1;
+  pointer-events: all;
+}
+
+.sb-dd-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  font-family: var(--font-head, "Space Grotesk", sans-serif);
+  font-size: 12px;
+  font-weight: 700;
+  color: #000;
+  cursor: pointer;
+  border-bottom: 1.5px solid #e5e5e0;
+  text-decoration: none;
+  transition: background 0.12s;
+}
+
+.sb-dd-item:last-child {
+  border-bottom: none;
+}
+.sb-dd-item:hover {
+  background: var(--accent, #facc15);
+}
+
+.sb-dd-item i {
+  width: 16px;
+  font-size: 12px;
+  color: #555;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.sb-dd-item:hover i {
+  color: #000;
+}
+
+.sb-dd-item.logout:hover {
+  background: var(--error, #ef4444);
+  color: #fff;
+}
+.sb-dd-item.logout:hover i {
+  color: #fff;
+}
+
+/* ── Top bar (replaces old navbar inside page-shell) ─ */
+.topbar {
+  height: 48px;
+  min-height: 48px;
+  background: #fff;
+  border-bottom: 3px solid #000;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 14px;
+  flex-shrink: 0;
+  z-index: 90;
+}
+
+.topbar-title {
+  font-family: var(--font-head, "Space Grotesk", sans-serif);
+  font-size: 15px;
+  font-weight: 800;
+  color: #000;
+  letter-spacing: -0.3px;
+}
+
+.topbar-sub {
+  font-size: 11px;
+  color: #888;
+  font-weight: 500;
+  margin-left: 2px;
+}
+
+.topbar-spacer {
+  flex: 1;
+}
+
+.topbar-clock {
+  font-family: var(--font-head, "Space Grotesk", sans-serif);
+  font-size: 12px;
+  font-weight: 700;
+  background: #f0f0eb;
+  border: 2px solid #000;
+  padding: 3px 10px;
+  letter-spacing: 1px;
+  color: #000;
+}
+
+.topbar-divider {
+  width: 2px;
+  height: 20px;
+  background: #000;
+}

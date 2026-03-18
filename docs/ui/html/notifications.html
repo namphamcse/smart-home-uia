@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notifications — Smart Home UIA</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../style/sidebar.css" />
+    <link rel="stylesheet" href="../style/notifications.css" />
+  </head>
+  <body data-role="admin">
+    <div id="app-sidebar"></div>
+
+    <div class="page-shell">
+      <!-- Topbar -->
+      <div class="topbar">
+        <span class="topbar-title">Notifications</span>
+        <span class="topbar-sub">— Activity Feed</span>
+        <div class="topbar-spacer"></div>
+        <div class="topbar-clock" id="nav-clock">00:00:00</div>
+      </div>
+
+      <!-- Page layout -->
+      <div class="notif-layout">
+        <!-- 2. Filter Bar -->
+        <div class="filter-bar">
+          <span class="filter-label">Type:</span>
+          <button class="filter-btn active" data-type="all">
+            <i class="fa-solid fa-border-all"></i> All
+            <span class="filter-count" id="cnt-all">0</span>
+          </button>
+          <button class="filter-btn type-alert" data-type="alert">
+            <i class="fa-solid fa-triangle-exclamation"></i> Alert
+            <span class="filter-count" id="cnt-alert">0</span>
+          </button>
+          <button class="filter-btn type-intrusion" data-type="intrusion">
+            <i class="fa-solid fa-user-secret"></i> Intrusion
+            <span class="filter-count" id="cnt-intrusion">0</span>
+          </button>
+          <button class="filter-btn type-device" data-type="device">
+            <i class="fa-solid fa-sliders"></i> Device
+            <span class="filter-count" id="cnt-device">0</span>
+          </button>
+          <button class="filter-btn type-system" data-type="system">
+            <i class="fa-solid fa-gear"></i> System
+            <span class="filter-count" id="cnt-system">0</span>
+          </button>
+
+          <div class="filter-sep"></div>
+
+          <div class="read-tabs">
+            <button class="read-tab active" data-read="all">All</button>
+            <button class="read-tab" data-read="unread">Unread</button>
+            <button class="read-tab" data-read="read">Read</button>
+          </div>
+
+          <div class="filter-spacer"></div>
+        </div>
+
+        <!-- 3. Bulk Action Bar -->
+        <div class="bulk-bar" id="bulk-bar">
+          <div class="bulk-select-all" id="bulk-select-all">
+            <div class="bulk-checkbox" id="bulk-checkbox">
+              <i class="fa-solid fa-check" style="display: none"></i>
+            </div>
+            <span>Select All</span>
+          </div>
+          <span class="bulk-count" id="bulk-count">0 selected</span>
+
+          <div class="bulk-sep"></div>
+
+          <button class="bulk-btn" id="btn-mark-all-read">
+            <i class="fa-solid fa-check-double"></i> Mark Read
+          </button>
+          <button class="bulk-btn danger" id="btn-delete-read">
+            <i class="fa-solid fa-trash"></i> Delete Read
+          </button>
+
+          <div class="bulk-spacer"></div>
+          <button
+            class="bulk-btn"
+            id="btn-clear-selection"
+            style="font-size: 9px; padding: 5px 10px"
+          >
+            <i class="fa-solid fa-xmark"></i> Cancel
+          </button>
+        </div>
+
+        <!-- 4. Notification List + empty state -->
+        <div class="notif-list-wrap" id="notif-list-wrap">
+          <div id="notif-list"></div>
+          <div class="empty-state" id="empty-state">
+            <i class="fa-solid fa-bell-slash"></i>
+            <h3>No Notifications</h3>
+            <p>All clear — nothing matches your current filters.</p>
+          </div>
+        </div>
+
+        <!-- 6. Pagination -->
+        <div class="pagination-bar" id="pagination-bar">
+          <span class="page-info" id="page-info">Page 1 of 3</span>
+
+          <button class="page-btn" id="btn-prev" disabled>
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+
+          <div id="page-btns"></div>
+
+          <button class="page-btn" id="btn-next">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+
+          <button class="btn-load-more" id="btn-load-more">
+            <i class="fa-solid fa-rotate-right"></i> Load More
+          </button>
+
+          <div class="pag-spacer"></div>
+          <span class="pag-summary" id="pag-summary">Showing 1–10 of 28</span>
+        </div>
+      </div>
+      <!-- /notif-layout -->
+    </div>
+    <!-- /page-shell -->
+
+    <!-- 5. Detail Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+      <div class="modal" id="notif-modal">
+        <div class="modal-head">
+          <div class="modal-icon" id="modal-icon">
+            <i id="modal-icon-i" class="fa-solid fa-bell"></i>
+          </div>
+          <div class="modal-title-col">
+            <div class="modal-title" id="modal-title">—</div>
+            <span class="modal-badge" id="modal-badge">Alert</span>
+          </div>
+          <button class="modal-close" id="modal-close">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-detail-grid">
+            <div class="modal-detail-item">
+              <div class="detail-label">Timestamp</div>
+              <div class="detail-val" id="modal-time">—</div>
+            </div>
+            <div class="modal-detail-item">
+              <div class="detail-label">Device</div>
+              <div class="detail-val" id="modal-device">—</div>
+            </div>
+            <div class="modal-detail-item">
+              <div class="detail-label">Type</div>
+              <div class="detail-val" id="modal-type">—</div>
+            </div>
+            <div class="modal-detail-item">
+              <div class="detail-label">Severity</div>
+              <div class="detail-val" id="modal-severity">—</div>
+            </div>
+          </div>
+          <div class="modal-description">
+            <div class="modal-desc-label">Full Description</div>
+            <div class="modal-desc-text" id="modal-desc">—</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a class="btn-nav-to" id="modal-nav-btn" href="#">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            <span id="modal-nav-label">Go to Device</span>
+          </a>
+          <button class="btn-modal-close" id="btn-modal-close-footer">
+            Close
+          </button>
+          <div class="modal-read-status" id="modal-read-status">
+            <i
+              class="fa-solid fa-circle-check"
+              style="color: var(--success)"
+            ></i>
+            Marked as read
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="ntf-toast" id="ntf-toast">
+      <i class="fa-solid fa-circle-check" id="ntf-toast-icon"></i>
+      <span id="ntf-toast-msg">Done</span>
+    </div>
+
+    <script src="../script/sidebar.js"></script>
+    <script src="../script/notifications.js"></script>
+  </body>
+</html>

@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Automation — Smart Home UIA</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../style/sidebar.css" />
+    <link rel="stylesheet" href="../style/automation.css" />
+  </head>
+  <body data-role="admin">
+    <div id="app-sidebar"></div>
+
+    <div class="page-shell">
+      <!-- Topbar -->
+      <div class="topbar">
+        <span class="topbar-title">Automation</span>
+        <span class="topbar-sub">— Rule Management</span>
+        <div class="topbar-spacer"></div>
+        <div class="topbar-clock" id="nav-clock">00:00:00</div>
+      </div>
+
+      <!-- 2. Summary Bar -->
+      <div class="summary-bar">
+        <div class="sb-seg seg-total">
+          <div class="sb-icon"><i class="fa-solid fa-list-check"></i></div>
+          <div>
+            <div class="sb-label">Total Rules</div>
+            <div class="sb-val" id="sb-total">0</div>
+          </div>
+        </div>
+        <div class="sb-seg seg-active">
+          <div class="sb-icon"><i class="fa-solid fa-circle-play"></i></div>
+          <div>
+            <div class="sb-label">Active</div>
+            <div class="sb-val" id="sb-active">0</div>
+          </div>
+        </div>
+        <div class="sb-seg seg-sensor">
+          <div class="sb-icon"><i class="fa-solid fa-microchip"></i></div>
+          <div>
+            <div class="sb-label">Sensor Rules</div>
+            <div class="sb-val" id="sb-sensor">0</div>
+          </div>
+        </div>
+        <div class="sb-seg seg-sched">
+          <div class="sb-icon"><i class="fa-solid fa-clock"></i></div>
+          <div>
+            <div class="sb-label">Schedule Rules</div>
+            <div class="sb-val" id="sb-sched">0</div>
+          </div>
+        </div>
+        <div class="sb-seg seg-exec">
+          <div class="sb-icon"><i class="fa-solid fa-bolt"></i></div>
+          <div>
+            <div class="sb-label">Executions Today</div>
+            <div class="sb-val" id="sb-exec">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Filter & Search Bar -->
+      <div class="filter-bar">
+        <div class="search-wrap">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input
+            type="text"
+            class="search-input"
+            id="search-input"
+            placeholder="Search rules…"
+          />
+        </div>
+
+        <div class="filter-sep"></div>
+
+        <span
+          style="
+            font-family: var(--font-head);
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--muted);
+          "
+          >Type:</span
+        >
+        <button class="filter-btn active" data-type="all">
+          <i class="fa-solid fa-border-all"></i> All
+        </button>
+        <button class="filter-btn type-sensor" data-type="sensor">
+          <i class="fa-solid fa-microchip"></i> Sensor
+        </button>
+        <button class="filter-btn type-schedule" data-type="schedule">
+          <i class="fa-solid fa-clock"></i> Schedule
+        </button>
+
+        <div class="filter-sep"></div>
+
+        <span
+          style="
+            font-family: var(--font-head);
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--muted);
+          "
+          >Status:</span
+        >
+        <button class="filter-btn status-active" data-status="active">
+          <i class="fa-solid fa-circle-play"></i> Active
+        </button>
+        <button class="filter-btn status-inactive" data-status="inactive">
+          <i class="fa-solid fa-circle-pause"></i> Inactive
+        </button>
+
+        <div class="filter-spacer"></div>
+
+        <!-- 5. Create Rule -->
+        <button class="btn-create-rule" id="btn-create-rule">
+          <i class="fa-solid fa-plus"></i> New Rule
+        </button>
+      </div>
+
+      <!-- Main layout -->
+      <div class="auto-layout">
+        <!-- 4. Rule List -->
+        <div class="rules-col">
+          <div class="rules-head">
+            <div class="rules-title">Automation Rules</div>
+            <span class="rules-count" id="rules-count">0 rules</span>
+          </div>
+          <div class="rules-list" id="rules-list">
+            <!-- JS renders -->
+          </div>
+          <div class="rules-empty" id="rules-empty">
+            <i class="fa-solid fa-gears"></i>
+            <p>No rules match your filter</p>
+          </div>
+        </div>
+
+        <!-- 7. Execution Log -->
+        <div class="log-col">
+          <div class="log-head">
+            <div class="log-title">Execution Log</div>
+            <div class="log-filters">
+              <select class="log-filter-select" id="log-rule-filter">
+                <option value="all">All Rules</option>
+              </select>
+              <button class="log-filter-btn active" data-result="all">
+                All
+              </button>
+              <button class="log-filter-btn" data-result="ok">OK</button>
+              <button class="log-filter-btn" data-result="err">Fail</button>
+            </div>
+          </div>
+          <div class="log-list" id="log-list">
+            <!-- JS renders -->
+          </div>
+        </div>
+      </div>
+      <!-- /auto-layout -->
+    </div>
+    <!-- /page-shell -->
+
+    <!-- 6. Create / Edit Rule Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+      <div class="modal" id="rule-modal">
+        <div class="modal-head">
+          <div class="modal-head-icon"><i class="fa-solid fa-gears"></i></div>
+          <div class="modal-head-title" id="modal-title">Create New Rule</div>
+          <button class="modal-close" id="modal-close">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <!-- Rule Name -->
+          <div class="form-row single">
+            <div class="form-field">
+              <label class="form-label">Rule Name</label>
+              <input
+                type="text"
+                class="form-input"
+                id="f-name"
+                placeholder="e.g. Auto Fan When Hot"
+              />
+            </div>
+          </div>
+
+          <!-- Trigger Type -->
+          <div class="form-row single">
+            <div class="form-field">
+              <label class="form-label">Trigger Type</label>
+              <div class="trigger-types">
+                <button class="trigger-type-btn active" data-trigger="sensor">
+                  <i class="fa-solid fa-microchip"></i> Sensor Based
+                </button>
+                <button class="trigger-type-btn" data-trigger="schedule">
+                  <i class="fa-solid fa-clock"></i> Schedule
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Sensor Trigger Fields ── -->
+          <div class="trigger-section active" id="section-sensor">
+            <div class="form-row single">
+              <div
+                class="form-label"
+                style="
+                  color: var(--primary);
+                  display: flex;
+                  align-items: center;
+                  gap: 6px;
+                "
+              >
+                <i class="fa-solid fa-microchip" style="font-size: 10px"></i>
+                Sensor Condition
+              </div>
+            </div>
+            <div class="form-row triple">
+              <div class="form-field">
+                <label class="form-label">Sensor</label>
+                <select class="form-select" id="f-sensor">
+                  <option value="temp">Temperature (°C)</option>
+                  <option value="hum">Humidity (%)</option>
+                  <option value="light">Light Level (lux)</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label class="form-label">Operator</label>
+                <select class="form-select" id="f-operator">
+                  <option value="gt">&gt; Greater than</option>
+                  <option value="lt">&lt; Less than</option>
+                  <option value="gte">&gt;= At least</option>
+                  <option value="lte">&lt;= At most</option>
+                  <option value="eq">= Equal to</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label class="form-label">Threshold Value</label>
+                <input
+                  type="number"
+                  class="form-input"
+                  id="f-threshold"
+                  placeholder="e.g. 35"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Schedule Trigger Fields ── -->
+          <div class="trigger-section" id="section-schedule">
+            <div class="form-row single">
+              <div
+                class="form-label"
+                style="
+                  color: var(--purple);
+                  display: flex;
+                  align-items: center;
+                  gap: 6px;
+                "
+              >
+                <i class="fa-solid fa-clock" style="font-size: 10px"></i>
+                Schedule Settings
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label class="form-label">Time</label>
+                <input
+                  type="time"
+                  class="form-input"
+                  id="f-time"
+                  value="23:00"
+                />
+              </div>
+              <div class="form-field">
+                <label class="form-label">Repeat Days</label>
+                <div class="day-picker">
+                  <div class="day-cb checked" data-day="Mon">Mon</div>
+                  <div class="day-cb checked" data-day="Tue">Tue</div>
+                  <div class="day-cb checked" data-day="Wed">Wed</div>
+                  <div class="day-cb checked" data-day="Thu">Thu</div>
+                  <div class="day-cb checked" data-day="Fri">Fri</div>
+                  <div class="day-cb" data-day="Sat">Sat</div>
+                  <div class="day-cb" data-day="Sun">Sun</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action -->
+          <div class="form-divider"></div>
+          <div class="form-row single">
+            <div
+              class="form-label"
+              style="
+                color: var(--success);
+                display: flex;
+                align-items: center;
+                gap: 6px;
+              "
+            >
+              <i class="fa-solid fa-bolt" style="font-size: 10px"></i> Action
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label">Target Device</label>
+              <select class="form-select" id="f-device">
+                <option value="d1">Living Room Light</option>
+                <option value="d2">Bedroom Light</option>
+                <option value="d3">Ceiling Fan</option>
+                <option value="d4">Front Door</option>
+                <option value="d5">AC Unit</option>
+                <option value="d6">Security Camera</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label">Action</label>
+              <select class="form-select" id="f-action">
+                <option value="on">Turn ON</option>
+                <option value="off">Turn OFF</option>
+                <option value="angle">Set Angle (Door)</option>
+                <option value="speed_low">Fan Speed: Low</option>
+                <option value="speed_med">Fan Speed: Medium</option>
+                <option value="speed_high">Fan Speed: High</option>
+                <option value="temp_set">Set AC Temp</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Extra value (angle / temp) -->
+          <div class="form-row single" id="f-extra-wrap" style="display: none">
+            <div class="form-field">
+              <label class="form-label" id="f-extra-label">Value</label>
+              <input
+                type="number"
+                class="form-input"
+                id="f-extra"
+                placeholder="e.g. 90"
+              />
+            </div>
+          </div>
+        </div>
+        <!-- /modal-body -->
+
+        <div class="modal-footer">
+          <button class="btn-save" id="btn-save-rule">
+            <i class="fa-solid fa-floppy-disk"></i> Save Rule
+          </button>
+          <button class="btn-cancel" id="btn-cancel-modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Confirm -->
+    <div class="confirm-overlay" id="confirm-overlay">
+      <div class="confirm-box">
+        <div class="confirm-icon"><i class="fa-solid fa-trash"></i></div>
+        <div class="confirm-title">Delete Rule?</div>
+        <div class="confirm-sub" id="confirm-sub">
+          This rule will be permanently removed.
+        </div>
+        <div class="confirm-btns">
+          <button class="btn-confirm-del" id="btn-confirm-del">Delete</button>
+          <button class="btn-confirm-cancel" id="btn-confirm-cancel">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="auto-toast" id="auto-toast">
+      <i class="fa-solid fa-circle-check" id="toast-icon"></i>
+      <span id="toast-msg">Done</span>
+    </div>
+
+    <script src="../script/sidebar.js"></script>
+    <script src="../script/automation.js"></script>
+  </body>
+</html>

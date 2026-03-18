@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Security — Smart Home UIA</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../style/sidebar.css" />
+    <link rel="stylesheet" href="../style/security.css" />
+  </head>
+  <body data-role="admin">
+    <div id="app-sidebar"></div>
+
+    <div class="page-shell">
+      <!-- Topbar -->
+      <div class="topbar">
+        <span class="topbar-title">Security</span>
+        <span class="topbar-sub">— Camera &amp; Motion</span>
+        <div class="topbar-spacer"></div>
+        <div class="topbar-clock" id="nav-clock">00:00:00</div>
+      </div>
+
+      <!-- Main -->
+      <div class="sec-layout">
+        <!-- ─ LEFT COLUMN ─ -->
+        <div class="left-col">
+          <!-- 2. Live Stream Panel -->
+          <div class="stream-panel" id="stream-panel">
+            <!-- Actual video -->
+            <video id="cam-video" autoplay muted playsinline></video>
+
+            <!-- Motion detection canvas overlay -->
+            <canvas id="cam-canvas"></canvas>
+
+            <!-- No camera placeholder -->
+            <div class="cam-placeholder" id="cam-placeholder">
+              <i class="fa-solid fa-camera-slash"></i>
+              <p>Camera feed unavailable</p>
+              <button class="btn-allow" id="btn-allow-cam">
+                <i class="fa-solid fa-video"></i>
+                Enable Camera
+              </button>
+            </div>
+
+            <!-- HUD layer -->
+            <div class="cam-hud">
+              <div class="cam-hud-top">
+                <div class="live-badge offline" id="live-badge">
+                  <div class="live-dot"></div>
+                  <span id="live-badge-text">OFFLINE</span>
+                </div>
+                <div class="hud-ts" id="hud-ts">--:--:--</div>
+              </div>
+              <div class="cam-hud-bot">
+                <div class="rec-badge" id="rec-badge">
+                  <div class="rec-dot"></div>
+                  REC
+                </div>
+                <div class="hud-btn-group">
+                  <button class="hud-btn" id="btn-snapshot" title="Snapshot">
+                    <i class="fa-solid fa-camera"></i>
+                  </button>
+                  <button
+                    class="hud-btn"
+                    id="btn-fullscreen"
+                    title="Fullscreen"
+                  >
+                    <i class="fa-solid fa-expand"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Corner scan lines -->
+            <div class="scan-corner sc-tl"></div>
+            <div class="scan-corner sc-tr"></div>
+            <div class="scan-corner sc-bl"></div>
+            <div class="scan-corner sc-br"></div>
+
+            <!-- Motion flash border -->
+            <div class="motion-flash" id="motion-flash"></div>
+
+            <!-- Snapshot flash -->
+            <div class="snapshot-flash" id="snapshot-flash"></div>
+          </div>
+
+          <!-- 3. Camera Control Bar -->
+          <div class="cam-ctrl-bar">
+            <button class="ctrl-btn" id="btn-toggle-cam">
+              <i class="fa-solid fa-video-slash"></i>
+              <span id="cam-btn-label">Camera Off</span>
+            </button>
+
+            <button class="ctrl-btn" id="btn-motion">
+              <i class="fa-solid fa-person-running"></i>
+              <span id="motion-btn-label">Motion Detect</span>
+            </button>
+
+            <button class="ctrl-btn" id="btn-record">
+              <i
+                class="fa-solid fa-circle"
+                style="font-size: 9px; color: var(--error)"
+              ></i>
+              <span id="rec-btn-label">Start Rec</span>
+            </button>
+
+            <div class="ctrl-spacer"></div>
+
+            <div class="ctrl-timer" id="ctrl-timer">00:00</div>
+            <div class="ctrl-status-text" id="ctrl-status-text">Standby</div>
+          </div>
+        </div>
+        <!-- /left-col -->
+
+        <!-- ─ RIGHT COLUMN ─ -->
+        <div class="right-col">
+          <div class="right-panel-wrap">
+            <!-- 4. Motion Detection Status -->
+            <div class="motion-card">
+              <div class="mc-row">
+                <div class="mc-icon watching" id="mc-icon">
+                  <i class="fa-solid fa-eye"></i>
+                </div>
+                <div>
+                  <div class="mc-label" id="mc-label">IR Sensor: Watching</div>
+                  <div class="mc-sub" id="mc-sub">Last triggered: 09:42 AM</div>
+                </div>
+                <div class="mc-status watching" id="mc-status">Watching</div>
+              </div>
+              <div class="mc-stats">
+                <div class="mc-stat">
+                  <span class="mc-stat-label">Today's Triggers</span>
+                  <span class="mc-stat-val" id="mc-count">7</span>
+                </div>
+                <div class="mc-stat">
+                  <span class="mc-stat-label">Last Event</span>
+                  <span class="mc-stat-val" id="mc-last">09:42</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5. Intrusion Alerts -->
+            <div class="alert-panel">
+              <div class="panel-head">
+                <div class="panel-title" style="justify-content: space-between">
+                  <span>Intrusion Alerts</span>
+                  <span
+                    id="unresolved-count"
+                    style="
+                      font-family: var(--font-head);
+                      font-size: 9px;
+                      font-weight: 800;
+                      background: var(--error);
+                      color: #fff;
+                      padding: 2px 8px;
+                      border: 2px solid #000;
+                    "
+                    >3 NEW</span
+                  >
+                </div>
+              </div>
+              <div class="alert-list" id="alert-list">
+                <!-- JS renders -->
+              </div>
+            </div>
+
+            <!-- 6. Recorded Video History -->
+            <div class="video-panel">
+              <div class="panel-head">
+                <div class="panel-title">Recorded Clips</div>
+              </div>
+              <div class="video-list" id="video-list">
+                <!-- JS renders -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /right-col -->
+
+        <!-- 7. Sensor Status Bar -->
+        <div class="sensor-status-bar">
+          <div class="ssb-seg">
+            <div class="ssb-led offline" id="ssb-cam-led"></div>
+            <span class="ssb-label">Webcam</span>
+            <span class="ssb-val" id="ssb-cam-val">Disconnected</span>
+          </div>
+          <div class="ssb-seg">
+            <div class="ssb-led online" id="ssb-ir-led"></div>
+            <span class="ssb-label">IR Sensor</span>
+            <span class="ssb-val" id="ssb-ir-val">Online</span>
+          </div>
+          <div class="ssb-seg">
+            <div class="ssb-led online"></div>
+            <span class="ssb-label">MQTT</span>
+            <span class="ssb-val">Connected</span>
+          </div>
+          <div class="ssb-seg">
+            <span class="ssb-label">Motion</span>
+            <span class="ssb-val" id="ssb-motion-val">Detection OFF</span>
+          </div>
+          <div class="ssb-seg">
+            <span class="ssb-label">Storage</span>
+            <span class="ssb-val">1.2 GB free</span>
+          </div>
+          <div class="ssb-seg">
+            <span class="ssb-update" id="ssb-update">Updated just now</span>
+          </div>
+        </div>
+      </div>
+      <!-- /sec-layout -->
+    </div>
+    <!-- /page-shell -->
+
+    <!-- Toast -->
+    <div class="sec-toast" id="sec-toast">
+      <i class="fa-solid fa-circle-check" id="sec-toast-icon"></i>
+      <span id="sec-toast-msg">Done</span>
+    </div>
+
+    <script src="../script/sidebar.js"></script>
+    <script src="../script/security.js"></script>
+  </body>
+</html>
