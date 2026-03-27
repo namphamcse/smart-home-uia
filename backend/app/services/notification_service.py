@@ -2,15 +2,10 @@ from app.schemas.notification import NotificationCreate, NotificationUpdate
 from app.repositories import NotificationRepository
 from app.core.exceptions import *
 
-from app.utils.logger import get_logger
-
-logger = get_logger(__name__)
-
 
 class NotificationService:
     def __init__(self, repo: NotificationRepository):
         self.repo = repo
-        logger.info("NotificationService initialized with NotificationRepository")
 
     def get_by_id(self, notification_id: int) -> dict:
         notification = self.repo.get_by_id(notification_id)

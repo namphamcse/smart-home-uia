@@ -2,13 +2,9 @@ from app.schemas.alert_threshold import AlertThresholdUpdate
 from app.repositories import AlertThresholdRepository
 from app.core.exceptions import *
 
-from app.utils.logger import get_logger
-logger = get_logger(__name__)
-
 class AlertThresholdService:
     def __init__(self, repo: AlertThresholdRepository):
         self.repo = repo
-        logger.info("AlertThresholdService initialized with AlertThresholdRepository")
 
     def get_by_id(self, alert_threshold_id: int) -> dict:
         alert_threshold = self.repo.get_by_id(alert_threshold_id)

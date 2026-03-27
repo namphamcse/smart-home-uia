@@ -2,15 +2,9 @@ from app.schemas.automation_rule import AutomationRuleCreate, AutomationRuleUpda
 from app.repositories import AutomationRuleRepository
 from app.core.exceptions import *
 
-from app.utils.logger import get_logger
-
-logger = get_logger(__name__)
-
-
 class AutomationRuleService:
     def __init__(self, repo: AutomationRuleRepository):
         self.repo = repo
-        logger.info("AutomationRuleService initialized with AutomationRuleRepository")
 
     def get_by_id(self, automation_rule_id: int) -> dict:
         automation_rule = self.repo.get_by_id(automation_rule_id)

@@ -1,3 +1,4 @@
+import asyncio
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -9,48 +10,33 @@ from app.core.exceptions import AppException
 from app.core.exception_handlers import app_exception_handler
 
 from app.api.router import api_router
-from app.services import *
-from app.repositories import *
-from app.database.supabase import supabase
-from app.mqtt.client import start_mqtt
+from app.core.container import Container
+from app.mqtt.client import start_mqtt, set_event_loop
 from app.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
+container = Container()
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     try:
-        start_mqtt()
-        # --- Startup ---
-        app.state.device_service = DeviceService(
-            repo=DeviceRepository(db=supabase)
-        )
-        app.state.sensor_service = SensorService(
-            repo=SensorRepository(db=supabase)
-        )
+        container.init_resources()
+        container.wire(packages=["app.api.endpoints", "app.mqtt.client"])
 
-        app.state.alert_threshold_service = AlertThresholdService(
-            repo=AlertThresholdRepository(db=supabase)
-        )
-
-        app.state.device_control_service = DeviceControlService(
-            repo=DeviceControlRepository(db=supabase)
-        )
+        loop = asyncio.get_event_loop()
+        set_event_loop(loop)          # bridge MQTT thread -> async loop
+        mqtt_client = start_mqtt()
         
-        app.state.notification_service = NotificationService(
-            repo=NotificationRepository(db=supabase)
-        )
 
-        app.state.automation_rule_service = AutomationRuleService(
-            repo=AutomationRuleRepository(db=supabase)
-        )
-
-        app.state.sensor_log_service = SensorLogService(
-            repo=SensorLogRepository(db=supabase)
-        )
-
+        app.state.mqtt_client = mqtt_client
+        
         # await mqtt_client.connect()
         yield
+
+        if mqtt_client:
+            mqtt_client.loop_stop()
+            mqtt_client.disconnect()
 
     except Exception as e:
         logger.error(f"Startup error: {e}")
@@ -67,6 +53,8 @@ app = FastAPI(
     debug=settings.DEBUG,
     lifespan=lifespan,
 )
+
+app.container = container
 
 def setup_middleware(app: FastAPI) -> None:
     # CORS

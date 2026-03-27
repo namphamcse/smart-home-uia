@@ -8,7 +8,6 @@ logger = get_logger(__name__)
 class DeviceService:
     def __init__(self, repo: DeviceRepository):
         self.repo = repo
-        logger.info("DeviceService initialized with DeviceRepository")
 
     def get_by_id(self, device_id: int) -> dict:
         device = self.repo.get_by_id(device_id)
