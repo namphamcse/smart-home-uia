@@ -1,10 +1,10 @@
 import "./Register.css";
-import "../Login.css";
+import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
-import GoogleButton from "../../components/ui/GoogleButton";
+import GoogleButton from "../components/ui/GoogleButton";
 import { useEffect, useState } from "react";
-import { useAuth } from "../../services/AuthProvider";
-import { useNoti } from "../../services/NotiProvider";
+import { useAuth } from "../services/AuthProvider";
+import { useNoti } from "../services/NotiProvider";
 export default function Register() {
   const { user, handleLogin } = useAuth();
   const { setNotification } = useNoti();

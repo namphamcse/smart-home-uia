@@ -1,4 +1,4 @@
-type DeviceTypeEnum =
+export type DeviceTypeEnum =
   | "light"
   | "fan"
   | "sensor"
@@ -6,9 +6,9 @@ type DeviceTypeEnum =
   | "servo"
   | "other";
 
-type DeviceModeEnum = "auto" | "manual";
+export type DeviceModeEnum = "auto" | "manual";
 
-export  interface Device {
+export interface Device {
   device_id: number;
   device_name: string;
   device_type: DeviceTypeEnum;
@@ -18,6 +18,31 @@ export  interface Device {
   status: string;
   is_active: boolean;
 }
+
+type ActionEnum =
+  | "turn_on"
+  | "turn_off"
+  | "set_color"
+  | "set_angle"
+  | "set_speed";
+
+type SourceEnum = "app" | "remote" | "auto" | "schedule";
+
+export interface DeviceControlHistory {
+  device_control_id: number;
+  device_id: number;
+  action: ActionEnum;
+  value: string;
+  source: SourceEnum;
+  executed_at: string;
+}
+
+export type DeviceControlRequest = {
+  device_id: number;
+  action: ActionEnum;
+  value: string | null;
+  source: SourceEnum;
+};
 
 export interface LiveSensorData {
   type: string;

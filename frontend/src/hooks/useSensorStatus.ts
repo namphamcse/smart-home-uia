@@ -20,7 +20,7 @@ export function useThreshold() {
 
 export function getSensorStatus(thresholds: Threshold[], sensorId: number, value: number | undefined) {
   const sensorThreshold = thresholds.find(t => t.sensor_id === sensorId);
-  if (!sensorThreshold || !value) return 'NORMAL';
+  if (!sensorThreshold || !value || !sensorThreshold.is_active) return 'NORMAL';
 
   if (value < sensorThreshold.min_threshold || value > sensorThreshold.max_threshold) {
     return 'ALERT';
