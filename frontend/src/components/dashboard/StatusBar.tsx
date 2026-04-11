@@ -1,5 +1,7 @@
 import './StatusBar.css'
+import { useDevices } from '../../hooks/useDevices';
 export default function StatusBar() {
+  const devices = useDevices();
   return (
     <footer className="status-bar">
       <div className="status-seg">
@@ -8,7 +10,7 @@ export default function StatusBar() {
           style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: '10px' }}
         ></i>
         <span className="status-label">Devices</span>
-        <span className="status-val" id="devices-online-bar">5/6 Online</span>
+        <span className="status-val" id="devices-online-bar">{devices.filter(d => d.status === 'online').length}/{devices.length} Online</span>
       </div>
       <div className="status-seg">
         <div className="status-pill">

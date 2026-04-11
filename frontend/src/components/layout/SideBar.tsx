@@ -1,7 +1,7 @@
 import "./SideBar.css";
 import { useAuth } from "../../services/AuthProvider";
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 const USER_ITEMS = [
   {
     id: "dashboard",
@@ -60,12 +60,17 @@ export default function SideBar({
   active: boolean;
   setActive: (active: boolean) => void;
 }) {
+  const location = useLocation();
   const { user, handleLogout } = useAuth();
-  const [activeItem, setActiveItem] = useState<string>("dashboard");
+  const [activeItem, setActiveItem] = useState<string>(location.pathname.split('/')[1] || 'dashboard');
   const [dropDownOpen, setDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
   const avatarUrl = user?.user_metadata?.picture;
+  useEffect(() => {
+    const path = location.pathname.split('/')[1] || 'dashboard';
+    setActiveItem(path);
+  }, [location.pathname]);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (

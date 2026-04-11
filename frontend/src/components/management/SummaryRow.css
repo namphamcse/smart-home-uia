@@ -1,0 +1,100 @@
+/* ════════════════════════════
+   2. SUMMARY CARDS
+════════════════════════════ */
+.summary-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-bottom: 3px solid var(--border);
+  flex-shrink: 0;
+}
+
+.sum-card {
+  background: var(--white);
+  border-right: 3px solid var(--border);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.sum-card:last-child {
+  border-right: none;
+}
+
+.sum-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 28px;
+  height: 28px;
+  border-left: 3px solid var(--border);
+  border-bottom: 3px solid var(--border);
+  background: var(--bg2);
+  transform: translate(3px, -3px);
+}
+
+.sum-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border: 2.5px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+
+.sum-card.card-users .sum-icon {
+  background: #dbeafe;
+  color: var(--primary);
+}
+.sum-card.card-online .sum-icon {
+  background: #d1fae5;
+  color: var(--success);
+}
+.sum-card.card-offline .sum-icon {
+  background: #fee2e2;
+  color: var(--error);
+}
+.sum-card.card-errors .sum-icon {
+  background: #ffedd5;
+  color: var(--warning);
+}
+.sum-card.card-uptime .sum-icon {
+  background: #ede9fe;
+  color: var(--purple);
+}
+
+.sum-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.sum-label {
+  font-family: var(--font-head);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+}
+
+.sum-val {
+  font-family: var(--font-head);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--border);
+  letter-spacing: -1px;
+  line-height: 1.1;
+}
+
+.sum-sub {
+  font-size: 10px;
+  color: var(--muted);
+  font-weight: 500;
+  margin-top: 1px;
+}

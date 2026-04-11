@@ -1,0 +1,81 @@
+/* ════════════════════════════
+   2. SUMMARY BAR
+════════════════════════════ */
+.summary-bar {
+  background: var(--border);
+  display: flex;
+  align-items: stretch;
+  height: 52px;
+  min-height: 52px;
+  flex-shrink: 0;
+}
+
+.sb-seg {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 22px;
+  border-right: 1.5px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.sb-seg:last-child {
+  border-right: none;
+}
+
+.sb-icon {
+  width: 28px;
+  height: 28px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.sb-seg.seg-total .sb-icon {
+  background: rgba(250, 204, 21, 0.15);
+  color: var(--accent);
+}
+.sb-seg.seg-active .sb-icon {
+  background: rgba(52, 211, 153, 0.15);
+  color: var(--success);
+}
+.sb-seg.seg-sensor .sb-icon {
+  background: rgba(37, 99, 235, 0.15);
+  color: #60a5fa;
+}
+.sb-seg.seg-sched .sb-icon {
+  background: rgba(124, 58, 237, 0.15);
+  color: #a78bfa;
+}
+.sb-seg.seg-exec .sb-icon {
+  background: rgba(249, 115, 22, 0.15);
+  color: var(--warning);
+}
+
+.sb-label {
+  font-family: var(--font-head);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.4);
+}
+.sb-val {
+  font-family: var(--font-head);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: -1px;
+  line-height: 1;
+}
+.sb-sub {
+  font-family: var(--font-head);
+  font-size: 9px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.3);
+  margin-top: 1px;
+}
