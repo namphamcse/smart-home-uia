@@ -24,22 +24,13 @@ export default function App() {
             <Route path="/register" element={<Register />}/>
             {/* Protected */}
             <Route element={<ProtectedRoute />}>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              {/*Placeholder for future routes */}
-              <Route path="/devices" element={<Devices />} />
-              <Route path="/environment" element={<Environment />} />
-              <Route path="/security" element={<Dashboard />} />
-              <Route path="/notifications" element={<Notifications />} />
-              <Route path="/automation" element={<Dashboard />} />
-              <Route path="/management" element={<Dashboard />} />
               <Route path="/" element={<Layout />}>
                 <Route index element={<Dashboard />} />
                 <Route path="dashboard" element={<Dashboard />} />
-                <Route path="devices" element={<Dashboard />} />
-                <Route path="environment" element={<Dashboard />} />
+                <Route path="devices" element={<Devices />} />
+                <Route path="environment" element={<Environment />} />
                 <Route path="security" element={<Dashboard />} />
-                <Route path="notifications" element={<Dashboard />} />
+                <Route path="notifications" element={<Notifications />} />
                 <Route path="automation" element={<Automation />} />
                 <Route path="management" element={<Management />} />
               </Route>

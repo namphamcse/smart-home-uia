@@ -1,6 +1,6 @@
-import type { DeviceTypeEnum } from "../types/device";
+import type { DeviceType } from "../types/device";
 
-export type FilterType = "all" | DeviceTypeEnum;
+export type FilterType = "all" | DeviceType;
 
 
 export const filterItems: {

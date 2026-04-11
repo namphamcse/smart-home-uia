@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import FilterBar from "../components/devices/FilterBar";
 import MainDevices from "../components/devices/MainDevices";
-import HomeLayout from "../components/layout/HomeLayout";
 import type {Device} from "../types/device";
 import axios from "axios";
 import type { FilterType } from "../constants/deviceFilters";
@@ -25,9 +24,9 @@ export default function Devices() {
   }, []);
   
   return (
-    <HomeLayout headerName="Devices" sub="— Control & Manage">
+  <>
       <FilterBar devices={devices} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
       <MainDevices devices={filteredDevices} setDevices={setDevices} selectedFilter={selectedFilter}/>
-    </HomeLayout>
+  </>
   );
 }

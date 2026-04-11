@@ -67,7 +67,7 @@ export default function ModalOverlay({ overlayType, setOverlayType, onDeviceDele
         device_name: String(form.get('device_name') || '').trim(),
         device_type: (form.get('device_type') || 'light') as DeviceType,
         pin_number: pinNumber,
-        device_mode: overlayType.device?.device_mode || 'auto',
+        device_mode: overlayType.device?.device_mode as DeviceType|| 'auto',
         location: String(form.get('location') || '').trim(),
         status: String(form.get('status') || 'online'),
         is_active: String(form.get('is_active') || 'off') === 'on',

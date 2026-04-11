@@ -2,7 +2,7 @@ import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import type {
   Device,
   DeviceControlHistory,
-  DeviceModeEnum,
+  DeviceType,
 } from "../../types/device";
 import "./Devices.css";
 import axios from "axios";
@@ -72,7 +72,7 @@ export default function MainDevices({
           ...targetDevice,
           device_mode: (targetDevice.device_mode === "auto"
             ? "manual"
-            : "auto") as DeviceModeEnum,
+            : "auto") as DeviceType,
         };
 
     setDevices((prev) =>

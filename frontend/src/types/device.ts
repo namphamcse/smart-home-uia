@@ -24,7 +24,7 @@ export interface DeviceUpdate {
   device_type: DeviceType;
   pin_number: number;
   location: string;
-  device_mode: DeviceModeEnum;
+  device_mode: DeviceType;
   status: string;
   is_active: boolean;
 }

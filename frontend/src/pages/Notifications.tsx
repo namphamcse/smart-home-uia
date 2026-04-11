@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import HomeLayout from "../components/layout/HomeLayout";
 import MainNotifications from "../components/notifications/MainNotifications";
 import NotiFilterBar from "../components/notifications/NotiFilterBar";
 import Overlay from "../components/notifications/Overlay";
@@ -73,7 +72,7 @@ export default function Notifications() {
   const currentAlerts = filteredAlerts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
   const allVisibleSelected = currentAlerts.length > 0 && currentAlerts.every((alert) => selectedIds.includes(alert.notification_id));
   const bulkActive = selectedIds.length > 0;
-  const {setNotification} = useNoti();
+  const { setNotification } = useNoti();
   const updateAlertLocally = (updated: Alert) => {
     setAlerts((prev) => prev.map((alert) => (alert.notification_id === updated.notification_id ? updated : alert)));
   };
@@ -167,7 +166,7 @@ export default function Notifications() {
   }, [currentPage, filteredAlerts.length]);
 
   return (
-    <HomeLayout headerName="Notifications" sub="— Activity Feed">
+    <>
       <NotiFilterBar
         activeType={typeFilter}
         activeRead={readFilter}
@@ -198,6 +197,6 @@ export default function Notifications() {
         deviceNames={deviceNames}
       />
       <Overlay alert={activeAlert} isOpen={Boolean(activeAlert)} onClose={handleCloseModal} deviceNames={deviceNames} />
-    </HomeLayout>
+    </>
   );
 }
