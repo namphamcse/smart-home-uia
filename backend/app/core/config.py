@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     SUPABASE_JWT_SECRET: str
     MQTT_BROKER: str
     MQTT_PORT: int
+    MQTT_USER: str
+    MQTT_PASSWORD: str
 
     COR_ORIGINS: list[str]
     class Config:

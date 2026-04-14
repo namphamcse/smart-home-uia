@@ -34,7 +34,6 @@ class MQTTClientManager:
     @classmethod
     def push_to_ws(
         cls, 
-        device_id: str, 
         data: dict,
         timeout: float = 5.0
     ) -> bool:
@@ -53,14 +52,14 @@ class MQTTClientManager:
         
         if loop is None:
             logger.warning(
-                f"Event loop not initialized when pushing to WS for {device_id}. "
+                f"Event loop not initialized when pushing to WS. "
                 "Make sure set_event_loop() was called."
             )
             return False
         
         try:
             future = asyncio.run_coroutine_threadsafe(
-                ws_manager.broadcast_to_device(device_id, data),
+                ws_manager.broadcast(data),
                 loop
             )
             # Wait for the coroutine to complete with timeout
@@ -69,14 +68,14 @@ class MQTTClientManager:
             
         except asyncio.TimeoutError:
             logger.error(
-                f"Timeout pushing message to {device_id} after {timeout}s. "
+                f"Timeout pushing message to device after {timeout}s. "
                 "WebSocket broadcast may be overloaded."
             )
             return False
             
         except Exception as e:
             logger.error(
-                f"Failed to push message to {device_id}: {type(e).__name__}: {e}",
+                f"Failed to push message to device: {type(e).__name__}: {e}",
                 exc_info=True
             )
             return False
@@ -87,6 +86,14 @@ class MQTTClientManager:
         with cls._lock:
             cls._client = client
 
+    @classmethod
+    def send_command(cls, command: dict) -> bool:
+        with cls._lock:
+            if cls._client is None:
+                logger.error("MQTT client not initialized")
+                return False
+            return publish_control(cls._client, command)
+
 
 # Module-level interface (backward compatible)
 def set_event_loop(loop: asyncio.AbstractEventLoop) -> None:
@@ -94,22 +101,19 @@ def set_event_loop(loop: asyncio.AbstractEventLoop) -> None:
     MQTTClientManager.set_event_loop(loop)
 
 
-def _push_to_ws(device_id: str, data: dict) -> bool:
+def _push_to_ws(data: dict) -> bool:
     """Thread-safe bridge: MQTT thread -> async WebSocket."""
-    return MQTTClientManager.push_to_ws(device_id, data)
+    return MQTTClientManager.push_to_ws(data)
 
 
 def on_connect(client, userdata, flags, reason_code, properties=None):
-    """Handle MQTT connection."""
     if reason_code == 0:
         logger.info("Connected to MQTT Broker successfully.")
-        client.subscribe("devices/#", qos=1)
-        logger.info("Subscribed to 'devices/#' topic")
+        # Subscribe đúng feed firmware gửi lên
+        client.subscribe("iot-json", qos=1)
+        logger.info("Subscribed to 'iot-json' topic")
     else:
-        logger.error(
-            f"Failed to connect to MQTT Broker, return code: {reason_code}. "
-            "Check broker address and credentials."
-        )
+        logger.error(f"Failed to connect, return code: {reason_code}")
 
 
 def on_disconnect(client, userdata, disconnect_flags, reason_code, properties=None):
@@ -122,80 +126,57 @@ def on_disconnect(client, userdata, disconnect_flags, reason_code, properties=No
     else:
         logger.info("MQTT client disconnected cleanly")
 
-
 def on_message(client, userdata, msg):
-    """Handle incoming MQTT message."""
+    """Nhận dữ liệu sensor từ firmware qua iot-json."""
     try:
-        topic = msg.topic
         payload = json.loads(msg.payload.decode())
-        
-        parts = topic.split("/")  # ["devices", "esp32_001", "sensors", "light"]
-        if len(parts) < 3:
-            logger.warning(f"Invalid topic format: {topic}")
+
+        if not all(k in payload for k in ("temp", "humi", "light")):
+            logger.warning(f"Missing fields in payload: {payload}")
             return
-        
-        device_id = parts[1]              # "esp32_001"
-        sub_path = "/".join(parts[2:])    # "sensors/light"
-        
-        route_message(device_id, sub_path, payload)
-        
+
+        handle_sensor_data(payload)
+
     except json.JSONDecodeError:
-        logger.warning(f"Invalid JSON on topic {msg.topic}: {msg.payload}")
+        logger.warning(f"Invalid JSON on iot-json: {msg.payload}")
     except Exception as e:
-        logger.error(f"Error processing message from {msg.topic}: {e}", exc_info=True)
+        logger.error(f"Error processing iot-json message: {e}", exc_info=True)
 
-
-def route_message(device_id: str, sub_path: str, data: dict) -> None:
-    """Route message to appropriate handler."""
-    handlers = {
-        "sensors/light": handle_light_data,
-        "sensors/dht20": handle_dht20_data,
-        "status": handle_status_data,
-    }
-    
-    handler = handlers.get(sub_path)
-    if handler:
-        try:
-            handler(device_id, data)
-        except Exception as e:
-            logger.error(
-                f"Error in handler for {device_id}/{sub_path}: {e}",
-                exc_info=True
-            )
-    else:
-        logger.debug(f"No handler for topic: {sub_path}")
-
-
-def handle_light_data(device_id: str, data: dict) -> None:
-    """Handle light sensor data."""
-    lux = data.get('lux', 'N/A')
-    condition = data.get('condition', 'N/A')
-    logger.info(f"[{device_id}]Light -> lux={lux}, condition={condition}")
-    
-    success = _push_to_ws(device_id, {"type": "light", **data})
+def handle_sensor_data(data: dict) -> None:
+    """
+    Xử lý gói dữ liệu tổng hợp {temp, humi, light} từ firmware.
+    Broadcast toàn bộ về WebSocket để frontend hiển thị.
+    """
+    logger.info(
+        f"[iot-json] temp={data['temp']}°C  "
+        f"humi={data['humi']}%  "
+        f"light={data['light']} lux"
+    )
+    # Broadcast về WS — không cần device_id nếu chỉ có 1 thiết bị,
+    # hoặc firmware có thể gửi kèm device_id trong payload nếu cần phân biệt
+    success = _push_to_ws({"type": "sensor", **data})
     if not success:
-        logger.warning(f"Failed to broadcast light data to {device_id}")
+        logger.warning("Failed to broadcast sensor data to WebSocket")
 
-
-def handle_dht20_data(device_id: str, data: dict) -> None:
-    """Handle DHT20 sensor data."""
-    temp = data.get('temperature_c', 'N/A')
-    humidity = data.get('humidity_pct', 'N/A')
-    logger.info(f"[{device_id}]DHT20 -> temp={temp}°C, humidity={humidity}%")
+def publish_control(client: mqtt.Client, command: dict) -> bool:
+    """
+    Gửi lệnh điều khiển xuống thiết bị qua iot-control.
     
-    success = _push_to_ws(device_id, {"type": "dht20", **data})
-    if not success:
-        logger.warning(f"Failed to broadcast DHT20 data to {device_id}")
-
-
-def handle_status_data(device_id: str, data: dict) -> None:
-    """Handle device status."""
-    status = data.get('status', 'UNKNOWN')
-    logger.info(f"[{device_id}]Status -> {status}")
-    
-    success = _push_to_ws(device_id, {"type": "status", **data})
-    if not success:
-        logger.warning(f"Failed to broadcast status to {device_id}")
+    Ví dụ command: {"action": "set_threshold", "value": 30}
+                   {"action": "toggle_relay", "state": "on"}
+    """
+    try:
+        payload = json.dumps(command)
+        result = client.publish("iot-control", payload, qos=1)
+        if result.rc == mqtt.MQTT_ERR_SUCCESS:
+            logger.info(f"[iot-control] Sent command: {command}")
+            return True
+        else:
+            logger.error(f"[iot-control] Publish failed, rc={result.rc}")
+            return False
+    except Exception as e:
+        logger.error(f"[iot-control] Error sending command: {e}", exc_info=True)
+        return False
 
 
 def start_mqtt() -> Optional[mqtt.Client]:
@@ -216,9 +197,7 @@ def start_mqtt() -> Optional[mqtt.Client]:
         # Configure auto-reconnect
         client.reconnect_delay_set(min_delay=2, max_delay=30)
         
-        # Optional: Set authentication
-        # if settings.MQTT_USER and settings.MQTT_PASSWORD:
-        #     client.username_pw_set(settings.MQTT_USER, settings.MQTT_PASSWORD)
+        client.username_pw_set(settings.MQTT_USER, settings.MQTT_PASSWORD)
         
         # Connect to broker
         logger.info(

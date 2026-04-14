@@ -9,12 +9,12 @@ router = APIRouter(
     tags=["WebSocket"]
 )
 
-@router.websocket("/{device_id}")
-async def websocket_endpoint(websocket: WebSocket, device_id: str):
-    await ws_manager.connect(websocket, device_id)
+@router.websocket("/")
+async def websocket_endpoint(websocket: WebSocket):
+    await ws_manager.connect(websocket)
+
     try:
         while True:
-            data = await websocket.receive_text()
-            # TODO: Handle incoming messages from clients if needed
+            await websocket.receive_text()
     except WebSocketDisconnect:
-        await ws_manager.disconnect(websocket, device_id)
+        await ws_manager.disconnect(websocket)

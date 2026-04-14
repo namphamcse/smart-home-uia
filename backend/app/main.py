@@ -66,13 +66,10 @@ def setup_middleware(app: FastAPI) -> None:
         allow_headers=["*"],
     )
 
-    # Production security (optional)
     # if settings.ENVIRONMENT == "production":
     #     app.add_middleware(
     #         TrustedHostMiddleware,
     #         allowed_hosts=[""],
-    #     )
-
 
 def setup_exception_handlers(app: FastAPI) -> None:
     app.add_exception_handler(AppException, app_exception_handler)

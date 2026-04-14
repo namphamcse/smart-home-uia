@@ -16,7 +16,6 @@ class AutomationRuleService:
         return self.repo.get_all()
 
     def create(self, payload: AutomationRuleCreate) -> dict:
-        print(payload.model_dump())
         return self.repo.create(payload.model_dump())
 
     def update(self, automation_rule_id: int, payload: AutomationRuleUpdate) -> dict:
