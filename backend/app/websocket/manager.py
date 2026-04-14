@@ -16,14 +16,14 @@ class WebSocketManager:
         async with self._lock:
             self._connections.append(websocket)
 
-        logger.info(f"[WS] Client connected -> total={self._count()}")
+        logger.info("[WS] Client connected")
 
     async def disconnect(self, websocket: WebSocket):
         async with self._lock:
             if websocket in self._connections:
                 self._connections.remove(websocket)
 
-        logger.info(f"[WS] Client disconnected -> total={self._count()}")
+        logger.info("[WS] Client disconnected")
 
     async def broadcast(self, data: dict):
         if not self._connections:
@@ -41,9 +41,3 @@ class WebSocketManager:
 
         for ws in dead:
             await self.disconnect(ws)
-
-    def _count(self) -> int:
-        return len(self._connections)
-
-
-ws_manager = WebSocketManager()

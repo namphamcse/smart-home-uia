@@ -2,6 +2,8 @@ from dependency_injector import containers, providers
 from app.repositories import *
 from app.services import *
 from supabase import create_client
+from app.websocket.manager import WebSocketManager
+from app.mqtt.client import MQTTGateway
 from app.core.config import settings
 
 class Container(containers.DeclarativeContainer):
@@ -11,6 +13,13 @@ class Container(containers.DeclarativeContainer):
         create_client,
         settings.SUPABASE_URL,
         settings.SUPABASE_KEY
+    )
+
+    ws_manager = providers.Singleton(WebSocketManager)
+
+    mqtt_gateway = providers.Singleton(
+        MQTTGateway,
+        ws_manager=ws_manager
     )
 
     device_repo = providers.Factory(DeviceRepository, db=supabase)
