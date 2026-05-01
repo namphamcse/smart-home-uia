@@ -67,10 +67,7 @@ export default function MainDashboard() {
             {devices.slice(0, 6).map((device) => (
               <DeviceItem
                 key={device.device_id}
-                name={device.device_name}
-                type={device.device_type}
-                location={device.location}
-                isOn={device.status === 'online'}
+                device={device}
               />
             ))}
           </div>
