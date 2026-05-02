@@ -1,11 +1,13 @@
 import type {
   Device,
   DeviceControlHistory,
+  DHT20Data,
 } from "../../types/device";
 import { createDeviceControlHistory } from "../../api/deviceControls";
 import { useState, type Dispatch, type SetStateAction, useRef } from "react";
 import { useNoti } from "../../services/NotiProvider";
 import { capitalizeFirst } from "../../utils/formatters";
+import { useWS } from "../../hooks/useWebSocket";
 
 export default function CardControl({
   device,
@@ -50,6 +52,7 @@ function FanControl({
   device: Device;
   setCtrlHistory: Dispatch<SetStateAction<DeviceControlHistory[]>>;
 }) {
+  const tempData = useWS<DHT20Data>('/5');
   const [speed, setSpeed] = useState<string>("medium");
   const { setNotification } = useNoti();
   const handleSetSpeed = async (value: string) => {
@@ -94,7 +97,7 @@ function FanControl({
         High
       </button>
       <div className="fan-temp" id="d3-temp">
-        27.4<span>°C</span>
+        {tempData ? tempData.temperature_c : 'N/A'}<span>°C</span>
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useNoti } from "../../services/NotiProvider";
 import { capitalizeFirst } from "../../utils/formatters";
+import { notifyThresholdsUpdated } from "../../hooks/useSensorStatus";
 
 type SensorType = "temperature" | "humidity" | "light";
 
@@ -82,7 +83,6 @@ export default function ThresholdPanel() {
     );
   }, [thresholdItems, selectedType]);
 
-  // whenever selected tab changes, load its values into the form
   useEffect(() => {
     if (!selectedThreshold) {
       setMinValue("");
@@ -125,6 +125,7 @@ export default function ThresholdPanel() {
         ),
       );
 
+      notifyThresholdsUpdated();
       console.log("Threshold updated");
     } catch (error) {
       console.error("Failed to update threshold:", error);

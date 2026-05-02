@@ -1,11 +1,14 @@
 export type DeviceType = 'light' | 'servo' | 'fan' | 'camera' | 'sensor' | 'other';
+export type DeviceTypeEnum = DeviceType;
+export type DeviceModeEnum = "auto" | "manual";
+
 export interface Device {
   device_id: number;
   device_name: string;
   device_type: DeviceType;
   pin_number: number;
   location: string;
-  device_mode: string;
+  device_mode: DeviceModeEnum;
   status: string;
   is_active: boolean;
 }
