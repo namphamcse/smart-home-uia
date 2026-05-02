@@ -1,4 +1,5 @@
 from typing import Any
+from datetime import datetime
 from app.core.exceptions import DatabaseException
 from app.utils.logger import get_logger
 
@@ -11,6 +12,16 @@ class BaseRepository:
 
     def _table(self) -> Any:
         return self.db.table(self.table_name)
+
+    def _serialize(self, obj: Any) -> Any:
+        """Recursively convert datetime objects to ISO strings so the DB client can JSON-encode the payload."""
+        if isinstance(obj, dict):
+            return {k: self._serialize(v) for k, v in obj.items()}
+        if isinstance(obj, list):
+            return [self._serialize(v) for v in obj]
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+        return obj
     
     def _execute(self, query) -> Any:
         import traceback
@@ -35,11 +46,11 @@ class BaseRepository:
         return res.data[0] if res.data and len(res.data) > 0 else None
 
     def create(self, data: dict) -> dict:
-        res = self._execute(self._table().insert(data))
+        res = self._execute(self._table().insert(self._serialize(data)))
         return res.data[0]
 
     def update(self, id: int, data: dict) -> dict | None:
-        res = self._execute(self._table().update(data).eq(self.pk, id))
+        res = self._execute(self._table().update(self._serialize(data)).eq(self.pk, id))
         return res.data[0] if res.data else None
 
     def delete(self, id: int) -> bool:

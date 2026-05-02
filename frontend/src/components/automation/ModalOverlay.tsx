@@ -6,7 +6,7 @@ type OverlayState = { type: string, rule?: AutomationRule };
 
 type RuleFormState = {
   device_id: number;
-  sensor_id: number;
+  sensor_id: number | null;
   automation_rule_name: string;
   trigger_type: TriggerType;
   condition_operator: ConditionOperator;
@@ -18,16 +18,35 @@ type RuleFormState = {
 };
 
 const SENSOR_OPTIONS = [
-  { id: 1, label: 'Temperature (C)' },
-  { id: 2, label: 'Humidity (%)' },
-  { id: 3, label: 'Light Level (lux)' },
+  { id: 2, label: 'Temperature (C)' },
+  { id: 3, label: 'Humidity (%)' },
+  { id: 4, label: 'Light Level (lux)' },
 ];
 
 const DAY_OPTIONS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
+function timeToIso(timeStr: string) {
+  const [hh, mm] = (timeStr || '00:00').split(':').map(Number);
+  const d = new Date();
+  const yyyy = d.getFullYear();
+  const M = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  const hhStr = String(hh).padStart(2, '0');
+  const mmStr = String(mm).padStart(2, '0');
+  return `${yyyy}-${M}-${dd}T${hhStr}:${mmStr}:00`;
+}
+
+function isoToTime(iso?: string | null) {
+  if (!iso) return '23:00';
+  const d = new Date(iso);
+  const hh = String(d.getHours()).padStart(2, '0');
+  const mm = String(d.getMinutes()).padStart(2, '0');
+  return `${hh}:${mm}`;
+}
+
 const DEFAULT_RULE: RuleFormState = {
   device_id: 0,
-  sensor_id: 1,
+  sensor_id: SENSOR_OPTIONS[0].id,
   automation_rule_name: '',
   trigger_type: 'sensor',
   condition_operator: '>',
@@ -48,12 +67,12 @@ function toRuleForm(rule?: AutomationRule, fallbackDeviceId = 0): RuleFormState 
 
   return {
     device_id: rule.device_id ?? fallbackDeviceId,
-    sensor_id: rule.sensor_id ?? 1,
+    sensor_id: rule.sensor_id ?? SENSOR_OPTIONS[0].id,
     automation_rule_name: rule.automation_rule_name ?? '',
     trigger_type: rule.trigger_type ?? 'sensor',
     condition_operator: rule.condition_operator ?? '>',
     condition_value: rule.condition_value ?? 0,
-    schedule_time: rule.schedule_time ?? '23:00',
+    schedule_time: rule.schedule_time ? isoToTime(String(rule.schedule_time)) : '23:00',
     repeat_days: rule.repeat_days ?? 'Mon,Tue,Wed,Thu,Fri',
     action: rule.action ?? 'turn_on',
     is_active: rule.is_active ?? true,
@@ -118,16 +137,17 @@ export default function ModalOverlay({
     try {
       const payload: AutomationRuleCreate | AutomationRuleUpdate = {
         device_id: Number(form.device_id),
-        sensor_id: form.trigger_type === 'sensor' ? Number(form.sensor_id) : 0,
+        sensor_id: form.trigger_type === 'sensor' ? Number(form.sensor_id) : null,
         automation_rule_name: form.automation_rule_name.trim(),
         trigger_type: form.trigger_type,
         condition_operator: form.trigger_type === 'sensor' ? form.condition_operator : '>',
         condition_value: form.trigger_type === 'sensor' ? Number(form.condition_value) : 0,
-        schedule_time: form.trigger_type === 'schedule' ? form.schedule_time : '',
+        schedule_time: form.trigger_type === 'schedule' ? timeToIso(form.schedule_time) : null,
         repeat_days: form.trigger_type === 'schedule' ? selectedDays.join(',') : '',
         action: form.action,
         is_active: form.is_active,
       };
+      console.log('Saving rule with payload:', payload);
 
       await onSaveRule(payload);
       setNotification(overlayType.rule ? 'Rule updated successfully.' : 'Rule created successfully.');
@@ -226,7 +246,7 @@ export default function ModalOverlay({
                   <select
                     className="form-select"
                     id="f-sensor"
-                    value={form.sensor_id}
+                    value={form.sensor_id ?? ''}
                     onChange={(e) => setForm((prev) => ({ ...prev, sensor_id: Number(e.target.value) }))}
                   >
                     {SENSOR_OPTIONS.map((sensor) => (

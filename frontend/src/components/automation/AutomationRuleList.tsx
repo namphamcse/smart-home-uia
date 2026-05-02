@@ -2,6 +2,7 @@ import './AutomationRuleList.css'
 import { useEffect, useState } from 'react';
 import type { AutomationRule } from '../../types/automation';
 import { useNoti } from '../../services/NotiProvider';
+const API_URL = import.meta.env.VITE_API_URL;
 export default function AutomationRuleList({ rule, setOverlayType }: { rule: AutomationRule, setOverlayType: (overlayType: { type: string, rule?: AutomationRule }) => void }) {
   const { setNotification } = useNoti();
   const [isActive, setIsActive] = useState(rule.is_active);
@@ -10,9 +11,24 @@ export default function AutomationRuleList({ rule, setOverlayType }: { rule: Aut
     setIsActive(rule.is_active);
   }, [rule.is_active]);
 
-  const handleDummyToggle = () => {
-    setIsActive((prev) => !prev);
-    setNotification('This is dummy toggle');
+  const handleDummyToggle = async () => {
+    try {
+      const response = await fetch(`${API_URL}/automation-rules/${rule.automation_rule_id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...rule, is_active: !isActive }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to update automation rule status');
+      }
+      setNotification('Automation rule toggled successfully');
+      setIsActive((prev) => !prev);
+    } catch (error) {
+      console.error('Error toggling automation rule:', error);
+      setNotification('Failed to toggle automation rule');
+    }
   };
 
   return (

@@ -1,20 +1,16 @@
 import './DeviceItem.css'
 import { useEffect, useState } from 'react';
 import { useNoti } from '../../services/NotiProvider';
-// const API_URL = import.meta.env.VITE_API_URL;
-interface DeviceProps {
-  name: string;
-  location: string;
-  type: string;
-  isOn: boolean;
-}
-export default function DeviceItem({ name, location, type, isOn }: DeviceProps) {
+import type { Device } from '../../types/device';
+const API_URL = import.meta.env.VITE_API_URL;
+
+export default function DeviceItem({ device }: { device: Device }) {
   const { setNotification } = useNoti();
-  const [isDeviceOn, setIsDeviceOn] = useState(isOn);
+  const [isDeviceOn, setIsDeviceOn] = useState(device.is_active);
 
   useEffect(() => {
-    setIsDeviceOn(isOn);
-  }, [isOn]);
+    setIsDeviceOn(device.is_active);
+  }, [device.is_active]);
 
   const icon = {
     'light': 'fa-lightbulb',
@@ -22,10 +18,28 @@ export default function DeviceItem({ name, location, type, isOn }: DeviceProps) 
     'ac': 'fa-snowflake',
     'door': 'fa-door-closed',
     'camera': 'fa-video',
-  }[type] || 'fa-cubes';
+    'sensor': 'fa-microchip',
+    'servo': 'fa-door-closed',
+    'other': 'fa-cubes',
+  }[device.device_type];
   const onToggle = async () => {
+    try {
+      const response = await fetch(`${API_URL}/devices/${device.device_id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...device, is_active: !isDeviceOn }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to update device status');
+      }
+    } catch (error) {
+      console.error('Error toggling device:', error);
+      setNotification('Failed to toggle device');
+    }
     setIsDeviceOn((prev) => !prev);
-    setNotification('This is dummy toggle');
+    setNotification('Device toggled successfully');
     return;
   }
   return (
@@ -35,12 +49,12 @@ export default function DeviceItem({ name, location, type, isOn }: DeviceProps) 
       </div>
       <div className="device-info">
         <div className="device-name">
-          {name}
+          {device.device_name}
           <span className={`device-badge ${isDeviceOn ? 'on-badge' : 'off-badge'}`}>
             {isDeviceOn ? 'On' : 'Off'}
           </span>
         </div>
-        <div className="device-sub">{location}</div>
+        <div className="device-sub">{device.location}</div>
       </div>
       <label className="toggle">
         <input
