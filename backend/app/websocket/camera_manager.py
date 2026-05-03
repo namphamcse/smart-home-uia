@@ -1,5 +1,4 @@
 import asyncio
-import json
 from fastapi import WebSocket
 from app.utils.logger import get_logger
 

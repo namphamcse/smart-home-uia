@@ -83,11 +83,11 @@ class MQTTGateway:
         try:
             data: dict[str, Any] = json.loads(msg.payload.decode())
 
-            logger.info(
-                f"[iot-json] temp={data['temp']}°C  "
-                f"humi={data['humi']}%  "
-                f"light={data['light']} lux"
-            )
+            # logger.info(
+            #     f"[iot-json] temp={data['temp']}°C  "
+            #     f"humi={data['humi']}%  "
+            #     f"light={data['light']} lux"
+            # )
 
             for key in ["temp", "humi", "light"]:
                 if key in data:

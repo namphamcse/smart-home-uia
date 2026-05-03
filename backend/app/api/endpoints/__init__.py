@@ -6,3 +6,4 @@ from .notifications import router as notifications_router
 from .automation_rules import router as automation_rules_router
 from .sensor_logs import router as sensor_logs_router
 from .websocket import router as websocket_router
+from .faces import router as faces_router

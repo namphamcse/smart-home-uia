@@ -14,6 +14,11 @@ class Settings(BaseSettings):
     MQTT_PORT: int
     MQTT_USER: str
     MQTT_PASSWORD: str
+    EDGE_MODEL_PATH: str
+    EDGE_MODEL_URL: str
+    AI_MODEL_PATH: str
+    AI_MODEL_URL: str
+    AI_STORAGE_PATH: str
 
     COR_ORIGINS: list[str]
     class Config:

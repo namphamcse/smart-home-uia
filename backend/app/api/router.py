@@ -11,3 +11,4 @@ api_router.include_router(notifications_router, prefix="/notifications", tags=["
 api_router.include_router(automation_rules_router, prefix="/automation-rules", tags=["Automation Rules"])
 api_router.include_router(sensor_logs_router, prefix="/sensor-logs", tags=["Sensor Logs"])
 api_router.include_router(websocket_router, prefix="/ws", tags=["WebSocket"])
+api_router.include_router(faces_router, prefix="/faces", tags=["Faces"])

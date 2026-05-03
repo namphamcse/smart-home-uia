@@ -39,4 +39,10 @@ class Container(containers.DeclarativeContainer):
     automation_engine = providers.Factory(AutomationEngine, automation_rule_repo, device_service, notification_service, scheduler, mqtt_gateway)
     automation_rule_service = providers.Factory(AutomationRuleService, automation_rule_repo, notification_service, automation_engine)
 
-    
+    mediapipe_processor = providers.Factory(MediaPipeFaceDetector, settings.EDGE_MODEL_PATH, settings.EDGE_MODEL_URL)
+
+    face_recognition_service = providers.Factory(FaceRecognitionService, settings.AI_MODEL_PATH, settings.AI_MODEL_URL)
+    face_embedding_repo = providers.Singleton(FaceEmbeddingRepository, settings.AI_STORAGE_PATH)
+    face_recognition_manager = providers.Factory(FaceRecognitionManager, face_recognition_service, face_embedding_repo)
+
+    face_recognition_queue = providers.Singleton(FaceRecognitionQueue, face_recognition_manager, notification_service, mqtt_gateway)

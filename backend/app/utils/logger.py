@@ -61,7 +61,10 @@ def setup_logging() -> None:
 
     for logger_name in TARGET_LOGGERS:
         logger = logging.getLogger(logger_name)
-        logger.setLevel(log_level)
+        if logger_name.startswith("uvicorn"):
+            logger.setLevel(logging.INFO)
+        else:
+            logger.setLevel(log_level)
         logger.addHandler(console_handler)
         logger.propagate = False
 

@@ -3,3 +3,7 @@ lib/
 __pycache__/
 *.pyc
 .env
+*.tflite
+*.onnx
+*.h5
+embeddings

@@ -55,3 +55,8 @@ class ConditionOperatorEnum(str, Enum):
     EQ = "=="
     GE = ">="
     LE = "<="
+
+class RecognitionEnum(str, Enum):
+    OWNER = "owner"
+    STRANGER = "stranger"
+    UNKNOWN = "unknown"

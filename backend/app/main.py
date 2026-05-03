@@ -26,9 +26,13 @@ async def lifespan(app: FastAPI):
         loop = asyncio.get_event_loop()
         
         mqtt = container.mqtt_gateway()
-        scheduler = container.scheduler()
-
+        scheduler = container.scheduler()  
         scheduler.start()
+
+        queue = container.face_recognition_queue()
+        global queue_worker_task
+        queue_worker_task = asyncio.create_task(queue.start_worker())
+        
         mqtt.set_engine(container.automation_engine())
         mqtt.start(settings.MQTT_BROKER,
                    settings.MQTT_PORT,
@@ -39,6 +43,10 @@ async def lifespan(app: FastAPI):
 
         mqtt.stop()
         scheduler.stop()
+
+        queue.stop_worker()
+        if queue_worker_task:
+            await queue_worker_task
 
     except Exception as e:
         logger.error(f"Startup error: {e}")

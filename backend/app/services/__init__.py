@@ -6,3 +6,8 @@ from .notification_service import NotificationService
 from .automation_rule_service import AutomationRuleService
 from .sensor_log_service import SensorLogService
 from .automation_engine import AutomationEngine
+from .edge.mediapipe_processor import MediaPipeFaceDetector
+from .ai.face_recognition_service import FaceRecognitionService
+from .ai.face_embedding_repository import FaceEmbeddingRepository
+from .ai.face_recognition_manager import FaceRecognitionManager
+from .ai.face_recognition_queue import FaceRecognitionQueue
