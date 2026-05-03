@@ -32,8 +32,7 @@ class BaseRepository:
                 exc_info=True
             )
             raise DatabaseException(
-                f"Database operation failed on {self.table_name}",
-                original_error=str(e)
+                f"Database operation failed on {self.table_name}"
             ) from e
 
     def get_all(self) -> list:

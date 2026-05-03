@@ -6,7 +6,7 @@ from app.core.exceptions import *
 from app.core.enums import *
 from app.services.device_control_service import DeviceControlService
 from app.services.notification_service import NotificationService
-from app.mqtt.client import MQTTGateway
+
 from app.utils.logger import get_logger
 logger = get_logger(__name__)
 
@@ -56,7 +56,7 @@ class DeviceService:
         # notification logic
         changed_fields = [k for k in data.keys() if k != "is_active"]
         # if device change other field -> create notification 
-        if changed_fields: 
+        if changed_fields != []: 
             changes = []
 
             for key, n_value in data.items():

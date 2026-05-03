@@ -7,6 +7,7 @@ from app.services.device_service import DeviceService
 from app.services.notification_service import NotificationService
 from app.core.enums import *
 from app.schemas.notification import NotificationCreate
+from app.schemas.device import DeviceUpdate
 
 class AutomationEngine:
     def __init__(self, repo: AutomationRuleRepository, device: DeviceService, notification: NotificationService, scheduler: Scheduler, mqtt: MQTTGateway):
@@ -44,7 +45,7 @@ class AutomationEngine:
             args=[rule["automation_rule_id"]],
         )
 
-        self.device.update(rule["device_id"], {"device_mode": DeviceModeEnum.AUTO})
+        self.device.update(rule["device_id"], DeviceUpdate(device_mode=DeviceModeEnum.AUTO))
 
     def sensor_rule(self, sensor_id: int, value: float):
         rules = self.repo.get_by_sensor_id(sensor_id)
