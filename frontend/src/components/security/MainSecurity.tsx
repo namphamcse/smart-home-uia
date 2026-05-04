@@ -148,6 +148,8 @@ export default function MainSecurity() {
   const recordSecondsRef = useRef(0);
   const stoppedRecordingSecondsRef = useRef(0);
   const toastTimerRef = useRef<number | null>(null);
+  const cameraWsRef = useRef<WebSocket | null>(null);
+  const frameIntervalRef = useRef<number | null>(null);
 
   const [overview, setOverview] = useState<SecurityOverview>(EMPTY_OVERVIEW);
   const [now, setNow] = useState(() => new Date());
@@ -325,6 +327,13 @@ export default function MainSecurity() {
   });
 
   const stopCameraStream = useEffectEvent(() => {
+    if (frameIntervalRef.current) {
+      window.clearInterval(frameIntervalRef.current);
+      frameIntervalRef.current = null;
+    }
+    cameraWsRef.current?.close();
+    cameraWsRef.current = null;
+
     streamRef.current?.getTracks().forEach((track) => track.stop());
     streamRef.current = null;
 
@@ -674,6 +683,32 @@ export default function MainSecurity() {
       setCameraActive(true);
       setCameraBusy(false);
       resizeCanvas();
+
+      const ws = new WebSocket(`${import.meta.env.VITE_WS_URL}/camera`);
+      cameraWsRef.current = ws;
+
+      frameIntervalRef.current = window.setInterval(() => {
+        const video = videoRef.current;
+        if (!video || ws.readyState !== WebSocket.OPEN) return;
+
+        const capture = document.createElement("canvas");
+        capture.width = video.videoWidth || 640;
+        capture.height = video.videoHeight || 480;
+        const ctx = capture.getContext("2d");
+        if (!ctx) return;
+
+        ctx.drawImage(video, 0, 0);
+        capture.toBlob(
+          (blob) => {
+            if (blob && ws.readyState === WebSocket.OPEN) {
+              blob.arrayBuffer().then((buf) => ws.send(buf));
+            }
+          },
+          "image/jpeg",
+          0.6,
+        );
+      }, 100);
+
       await syncCameraDeviceState(true);
       showToast("Camera started", "success");
     } catch (error) {
@@ -918,6 +953,11 @@ export default function MainSecurity() {
         window.clearTimeout(toastTimerRef.current);
       }
 
+      if (frameIntervalRef.current) {
+        window.clearInterval(frameIntervalRef.current);
+      }
+
+      cameraWsRef.current?.close();
       localClipUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
     };
   }, []);

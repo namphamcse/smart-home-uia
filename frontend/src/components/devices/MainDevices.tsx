@@ -1,8 +1,5 @@
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
-import type {
-  Device,
-  DeviceControlHistory,
-} from "../../types/device";
+import type { Device, DeviceControlHistory } from "../../types/device";
 import "./Devices.css";
 import axios from "axios";
 import {
@@ -70,6 +67,7 @@ export default function MainDevices({
       : {
           ...targetDevice,
           device_mode: (targetDevice.device_mode === "auto"
+          
             ? "manual"
             : "auto") as Device["device_mode"],
         };
@@ -79,21 +77,20 @@ export default function MainDevices({
         device.device_id === deviceId ? optimisticDevice : device,
       ),
     );
+
     const successMessage = isPowerButton
       ? `${name} turned ${optimisticDevice.is_active ? "ON" : "OFF"}`
       : `${name}: Auto Mode ${optimisticDevice.device_mode === "auto" ? "ON" : "OFF"}`;
     setNotification(successMessage);
+
     try {
       const deviceResponse = await axios.put<Device>(
         `${API_URL}/devices/${deviceId}`,
         optimisticDevice,
       );
+
       const updatedDevice = deviceResponse.data;
-      if (isPowerButton) {
-        const action = optimisticDevice.is_active ? "turn_on" : "turn_off";
-        const updatedHistory = await createDeviceControlHistory(deviceId, name, action, null);
-        setCtrlHistory((prev) => [...prev, updatedHistory]);
-      }
+
       setDevices((prev) =>
         prev.map((device) =>
           device.device_id === deviceId ? updatedDevice : device,
@@ -151,11 +148,13 @@ export default function MainDevices({
                       {d.location}
                     </div>
                   </div>
-                  <span className={`card-status ${isAuto ? "auto" : d.status}`}>{isAuto ? "auto" : d.status}</span>
+                  <span className={`card-status ${isAuto ? "auto" : d.status}`}>
+                    {isAuto ? "auto" : d.status}
+                  </span>
                 </div>
 
                 {/**/}
-                <CardControl device={d} setCtrlHistory={setCtrlHistory}/>
+                <CardControl device={d} setCtrlHistory={setCtrlHistory} />
 
                 <div className="card-toggle-row">
                   <span className="card-toggle-label">Power</span>
