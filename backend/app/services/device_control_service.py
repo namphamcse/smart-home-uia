@@ -12,7 +12,7 @@ class DeviceControlService:
         return self.repo.get_by_device_id(device_id)
     
     def create(self, payload: DeviceControlCreate) -> dict:
-        result = self.mqtt.send_command({payload.device_name: 1 if payload.action == ActionEnum.TURN_ON else 0})
+        result = self.mqtt.send_command({payload.device_name: 1 if payload.value == ActionEnum.TURN_ON else 0})
 
         if result is False:
             raise DeviceStateChangeNotAllowedException(payload.device_id)
